@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.prajw.hackernews.ProfileActivity">
+    tools:context="com.example.prajw.hacknews.ProfileActivity">
 
     <RelativeLayout
         android:id="@+id/rellay1"
@@ -107,7 +107,7 @@
                     android:textColor="@color/orange"
                     android:textSize="12sp" />
 
-                <TextView
+                <EditText
                     android:id="@+id/something"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -137,7 +137,7 @@
                     android:textColor="@color/orange"
                     android:textSize="12sp" />
 
-                <TextView
+                <EditText
                     android:id="@+id/dob"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -166,7 +166,7 @@
                     android:textColor="@color/orange"
                     android:textSize="12sp" />
 
-                <TextView
+                <EditText
                     android:id="@+id/institution"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -196,7 +196,7 @@
                     android:textColor="@color/orange"
                     android:textSize="12sp" />
 
-                <TextView
+                <EditText
                     android:id="@+id/github"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
