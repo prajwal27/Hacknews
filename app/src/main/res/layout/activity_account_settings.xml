@@ -9,23 +9,26 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/relay1">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/relay1">
+            android:id="@+id/relay2">
 
-            <include layout="@layout/layout_tabs"/>
+            <include layout="@layout/snippet_account_settings_toolbar"/>
 
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/rellay1">
+            android:layout_below="@+id/relay2"
+            android:id="@+id/relay3"
+            android:layout_marginBottom="56dp">
 
-            <include layout="@layout/layout_view_pager"/>
+            <include layout="@layout/layout_center_accountsettings"/>
 
         </RelativeLayout>
 
