@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-    <resources>
+<resources>
     <color name="colorPrimary">#65DCE5</color>
     <color name="colorPrimaryDark">#49BEFF</color>
     <color name="colorAccent">#F47100</color>
@@ -23,5 +23,7 @@
     <color name="followersBg">#65DCE5</color>
     <color name="followingBg">#49BEFF</color>
     <color name="black">#000000</color>
+
+    <color name="black_overlay">#66000000</color>
 
 </resources>

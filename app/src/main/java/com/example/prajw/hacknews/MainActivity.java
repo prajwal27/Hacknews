@@ -45,6 +45,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
@@ -82,7 +83,10 @@ public class MainActivity extends AppCompatActivity {
     RecyclerViewPageAdapter topAdapter;
     RecyclerViewPageAdapter recentAdapter;
     RecyclerViewPageAdapter bestAdapter;
-    RecyclerViewPageAdapter favouriteAdapter;
+    private Story s;
+    //RecyclerViewPageAdapter favouriteAdapter;
+   // FavouriteActivity favourite;
+
 
    /* @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -97,6 +101,16 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        if(firebaseAuthListener!= null){
+            mAuth.removeAuthStateListener(firebaseAuthListener);}
+
+            firebaseFirestore.collection("Users").document(uid).collection("fav").add(bestAdapter.getFavourites());
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -106,11 +120,11 @@ public class MainActivity extends AppCompatActivity {
         TabLayout listTabs = findViewById(R.id.tabs);
         listTabs.setupWithViewPager(viewPager);
         //progressBar.setVisibility(View.VISIBLE);
-
+        //favourite = (FavouriteActivity)getApplicationContext();
         bestAdapter = new RecyclerViewPageAdapter(this,0);
         recentAdapter = new RecyclerViewPageAdapter(this,0);
         topAdapter = new RecyclerViewPageAdapter(this,0);
-        favouriteAdapter = new RecyclerViewPageAdapter(this,1);
+        //favourite.favouriteAdapter = new RecyclerViewPageAdapter(this,1);
 
         if (savedInstanceState != null) {
             // progressBar.setVisibility(View.GONE);
@@ -346,12 +360,15 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            if (stories.size() > 0)
-                getDetails(stories.get(0));
+            try{if (stories.size() > 0)
+                getDetails(stories.get(0));}catch (NullPointerException e){
+                Log.d("ddde",e.toString());
+            }
             return null;
         }
 
-        private void getDetails(final Story story) {
+        private void getDetails( Story story) {
+             s =story;
             String url = getString(R.string.item) + story.getId() + ".json";
             JsonObjectRequest getDetails = new JsonObjectRequest(Request.Method.GET,
                     url,
@@ -364,12 +381,12 @@ public class MainActivity extends AppCompatActivity {
                                     stories.remove(0);
                                     getDetails(stories.get(0));
                                 }
-                                story.setBy(response.getString("by"));
-                                story.setDescendants(response.getInt("descendants"));
-                                story.setScore(response.getInt("score"));
-                                story.setTime(response.getLong("time"));
-                                story.setTitle(response.getString("title"));
-                                adapter.addStory(story);
+                                s.setBy(response.getString("by"));
+                                s.setDescendants(response.getInt("descendants"));
+                                s.setScore(response.getInt("score"));
+                                s.setTime(response.getLong("time"));
+                                s.setTitle(response.getString("title"));
+                                adapter.addStory(s);
                                 //Log.d(TAG, "Get details " + student.getUsername() + "");
                                 //if (listType.equals("Top"))
                                 //progressBar.setVisibility(View.GONE);
@@ -426,6 +443,8 @@ public class MainActivity extends AppCompatActivity {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     firebaseFirestore = FirebaseFirestore.getInstance();
+                    storageReference = FirebaseStorage.getInstance().getReference();
+                    uid = user.getUid();
                     firebaseFirestore.collection("Users").document(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -466,12 +485,7 @@ public class MainActivity extends AppCompatActivity {
         //checkCurrentUser(mAuth.getCurrentUser());
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if(firebaseAuthListener!= null){
-            mAuth.removeAuthStateListener(firebaseAuthListener);}
-    }
+
 
     /**
      * this is for setting up bottomnavigation

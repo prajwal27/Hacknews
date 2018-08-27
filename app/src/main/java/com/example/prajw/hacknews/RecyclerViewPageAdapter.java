@@ -24,7 +24,8 @@ import java.util.List;
 
 public class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPageAdapter.MyViewHolder>{
     private static final String TAG = "ListViewAdapter";
-    private List<Story> stories, favourites = new ArrayList<Story>();
+    private List<Story> stories = new ArrayList<Story>();
+    private List<Story> favourites = new ArrayList<Story>();
     private Context context;
     private static final int ALPHA_ANIMATION_TIME = 200;
     final static int RECENT = 1;
@@ -36,9 +37,9 @@ public class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPa
 
     public RecyclerViewPageAdapter(Context context, int identifier /*, List<Story> stories*/){
         //this.stories = stories;
-        /*if(identifier !=0) {
+        if(identifier !=0) {
             favouriteActivity = (FavouriteActivity) context;
-        }*/
+        }
         activity = (MainActivity)context;
         this.context = context;
 
@@ -64,6 +65,14 @@ public class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPa
 
     public void setList(List<Story> stories) {
         this.stories = stories;
+    }
+
+    public List<Story> getFavourites() {
+        return favourites;
+    }
+
+    public void setFavourites(List<Story> favourites) {
+        this.favourites = favourites;
     }
 
     public List<Story> getList() {
@@ -111,6 +120,8 @@ public class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPa
                     favourites.add(stories.get(holder.getAdapterPosition()));
                     stories.get(holder.getAdapterPosition()).setFavourite(false);
                     holder.heart.setImageResource(R.drawable.border_fav_story);
+
+                    favouriteActivity.favouriteAdapter.addStory(stories.get(holder.getAdapterPosition()));
                     // **** activity.removeStory(stories.get(holder.getAdapterPosition()));
                     //  activity.mSelectedAdapter
                     //        .removeStudent(students.get(holder.getAdapterPosition()));
@@ -123,6 +134,7 @@ public class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPa
                     stories.get(holder.getAdapterPosition()).setFavourite(true);
                     ////  *** activity..addStory(stories.get(holder.getAdapterPosition()));
                     holder.heart.setImageResource(R.drawable.ic_favorite_black_24dp);
+                    favouriteActivity.favouriteAdapter.removeStory(stories.get(holder.getAdapterPosition()));
                     //  activity.mUnselectedAdapter
                     //         .removeStudent(students.get(holder.getAdapterPosition()));
                     //if (identifier == ALL)
@@ -146,7 +158,7 @@ public class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPa
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return stories.size();
+        return this.stories.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{

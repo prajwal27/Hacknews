@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +35,7 @@ import com.google.firebase.storage.UploadTask;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,8 +71,10 @@ public class ProfileActivity extends AppCompatActivity {
         place = findViewById(R.id.tv_address);
         settings = findViewById(R.id.settings);
 
+        Log.d("dadda","dddedcdccd");
         if(getIntent().getStringExtra("start").equals("1")){
             findViewById(R.id.bottom_nav).setVisibility(View.GONE);
+            Log.d("dadda","ddde");
             submit.setVisibility(View.VISIBLE);
             submit.setEnabled(true);
         }else{

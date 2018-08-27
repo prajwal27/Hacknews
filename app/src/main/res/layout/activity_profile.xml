@@ -83,7 +83,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/rellay1">
+        android:layout_below="@+id/rellay1"
+        android:layout_above="@+id/relay_bottom_nav">
 
         <LinearLayout
             android:layout_width="match_parent"

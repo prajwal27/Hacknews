@@ -5,4 +5,8 @@
     <string name="beststories">https://hacker-news.firebaseio.com/v0/beststories.json</string>
     <string name="newstories">https://hacker-news.firebaseio.com/v0/newstories.json</string>
 
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
 </resources>
