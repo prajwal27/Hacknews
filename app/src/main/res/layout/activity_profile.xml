@@ -25,10 +25,8 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginTop="8dp"
-                android:adjustViewBounds="true"
                 android:background="@drawable/orange_circle"
                 android:padding="2dp"
-                android:scaleType="centerInside"
                 android:src="@drawable/ic_user"/>
 
 
@@ -43,7 +41,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="4dp"
             android:fontFamily="sans-serif-light"
-            android:textColor="@color/orange"
+            android:textColor="@color/white"
             android:textSize="16sp"
             android:hint="Name"
             android:textColorHint="@color/white"
@@ -57,8 +55,7 @@
             android:layout_below="@+id/tv_name"
             android:layout_centerHorizontal="true"
             android:fontFamily="sans-serif"
-            android:textAllCaps="true"
-            android:textColor="@color/orange"
+            android:textColor="@color/white"
             android:textColorHint="@color/white"
             android:textStyle="bold"
             android:textSize="12sp"
@@ -84,15 +81,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/rellay1"
-        android:layout_above="@+id/relay_bottom_nav">
+        android:layout_above="@+id/bottom_nav">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="4dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -120,8 +117,8 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="12dp"
-                    android:background="@color/editTextBG" />
+                    android:layout_marginTop="1dp"
+                    android:background="@color/grey" />
 
             </LinearLayout>
 
@@ -224,8 +221,6 @@
                 android:text="UPDATE"
                 android:textSize="20sp"
                 />
-
-
 
 
         </LinearLayout>

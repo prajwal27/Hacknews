@@ -2,6 +2,7 @@ package com.example.prajw.hacknews;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +23,7 @@ import com.example.prajw.hacknews.Story;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPageAdapter.MyViewHolder>{
+ class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPageAdapter.MyViewHolder>{
     private static final String TAG = "ListViewAdapter";
     private List<Story> stories = new ArrayList<Story>();
     private List<Story> favourites = new ArrayList<Story>();
@@ -37,9 +38,9 @@ public class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPa
 
     public RecyclerViewPageAdapter(Context context, int identifier /*, List<Story> stories*/){
         //this.stories = stories;
-        if(identifier !=0) {
-            favouriteActivity = (FavouriteActivity) context;
-        }
+        //if(identifier !=0) {
+          //  favouriteActivity = (FavouriteActivity) context;
+        //}
         activity = (MainActivity)context;
         this.context = context;
 
@@ -54,13 +55,13 @@ public class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPa
     }
 
     public void removeStory(Story story) {
-       /* for (int i = 0; i < students.size(); i++) {
-            if (students.get(i).getUsername().equals(student.getUsername())) {
-                students.remove(i);
+        for (int i = 0; i < favourites.size(); i++) {
+            if (favourites.get(i).getId() == story.getId()) {
+                favourites.remove(i);
                 notifyItemRemoved(i);
                 break;
             }
-        }*/
+        }
     }
 
     public void setList(List<Story> stories) {
@@ -96,11 +97,11 @@ public class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPa
 
         holder.by_vh.setText(stories.get(position).getBy());
         holder.title_vh.setText(stories.get(position).getTitle());
-        holder.likes_vh.setText(stories.get(position).getScore());
-        holder.comments_vh.setText(stories.get(position).getDescendants());
+        holder.likes_vh.setText(String.valueOf(stories.get(position).getScore()));
+        holder.comments_vh.setText(String.valueOf(stories.get(position).getDescendants()));
         holder.time_vh.setText(String.valueOf(stories.get(position).getTime()));
 
-        if (stories.get(holder.getAdapterPosition()).getFavourite())
+        if (stories.get(holder.getAdapterPosition()).getFavourite()==1)
             holder.heart.setImageResource(R.drawable.ic_favorite_black_24dp);
         else
             holder.heart.setImageResource(R.drawable.border_fav_story);
@@ -115,13 +116,20 @@ public class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPa
                 //Depending on whether the student is present in selected list or not
                 //changes are carried out to all,unselected and selected list.
 
-                if (stories.get(holder.getAdapterPosition()).getFavourite()) {
+                if (stories.get(holder.getAdapterPosition()).getFavourite()==1) {
 
                     favourites.add(stories.get(holder.getAdapterPosition()));
-                    stories.get(holder.getAdapterPosition()).setFavourite(false);
+                    stories.get(holder.getAdapterPosition()).setFavourite(0);
                     holder.heart.setImageResource(R.drawable.border_fav_story);
+                    if(identifier==0){
+                        activity.topAdapter.notifyDataSetChanged();
+                    }else if(identifier == 1){
+                        activity.recentAdapter.notifyDataSetChanged();
+                    }else{
+                        activity.bestAdapter.notifyDataSetChanged();
+                    }
 
-                    favouriteActivity.favouriteAdapter.addStory(stories.get(holder.getAdapterPosition()));
+                   //   favouriteActivity.favouriteAdapter.addStory(stories.get(holder.getAdapterPosition()));
                     // **** activity.removeStory(stories.get(holder.getAdapterPosition()));
                     //  activity.mSelectedAdapter
                     //        .removeStudent(students.get(holder.getAdapterPosition()));
@@ -131,10 +139,18 @@ public class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPa
                     //  activity.mAllAdapter.notifyDataSetChanged();
                 } else {
                     favourites.remove(stories.get(holder.getAdapterPosition()));
-                    stories.get(holder.getAdapterPosition()).setFavourite(true);
+                    stories.get(holder.getAdapterPosition()).setFavourite(1);
                     ////  *** activity..addStory(stories.get(holder.getAdapterPosition()));
                     holder.heart.setImageResource(R.drawable.ic_favorite_black_24dp);
-                    favouriteActivity.favouriteAdapter.removeStory(stories.get(holder.getAdapterPosition()));
+
+                    if(identifier == 0){
+                        activity.topAdapter.notifyDataSetChanged();
+                    }else if(identifier == 1){
+                        activity.recentAdapter.notifyDataSetChanged();
+                    }else{
+                        activity.bestAdapter.notifyDataSetChanged();
+                    }
+                    //favouriteActivity.favouriteAdapter.removeStory(stories.get(holder.getAdapterPosition()));
                     //  activity.mUnselectedAdapter
                     //         .removeStudent(students.get(holder.getAdapterPosition()));
                     //if (identifier == ALL)
@@ -161,7 +177,8 @@ public class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPa
         return this.stories.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder{
+
+     public static class MyViewHolder extends RecyclerView.ViewHolder{
         ImageView heart;
         TextView by_vh, title_vh, url_vh, likes_vh, comments_vh, time_vh;
         ConstraintLayout detailed;

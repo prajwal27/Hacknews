@@ -1,17 +1,20 @@
 package com.example.prajw.hacknews;
 
-public class Story {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Story implements Parcelable {
 
     private String by, title, url;
     private int descendants, score;
     private long id, time;
-    private Boolean isFavourite;
+    private int isFavourite;
 
-    public Boolean getFavourite() {
+    public int getFavourite() {
         return isFavourite;
     }
 
-    public void setFavourite(Boolean favourite) {
+    public void setFavourite(int favourite) {
         isFavourite = favourite;
     }
     // setter maadbeku;
@@ -28,6 +31,11 @@ public class Story {
         this.score = score;
         this.id = id;
         this.time = time;
+    }
+
+    @Override
+    public String toString() {
+        return by + String.valueOf(id);
     }
 
     public String getBy() {
@@ -85,4 +93,44 @@ public class Story {
     public void setTime(long time) {
         this.time = time;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeString(title);
+        dest.writeString(by);
+        dest.writeLong(id);
+        dest.writeLong(time);
+        dest.writeString(url);
+        dest.writeInt(score);
+        dest.writeInt(descendants);
+
+    }
+    public static final Parcelable.Creator<Story> CREATOR =
+            new Parcelable.Creator<Story>() {
+                @Override
+                public Story createFromParcel(Parcel source) {
+                    Story story = new Story();
+                    story.setTitle(source.readString());
+                    story.setBy(source.readString());
+                    story.setUrl(source.readString());
+                    story.setDescendants(source.readInt());
+                    story.setScore(source.readInt());
+                    story.setId(source.readLong());
+                    story.setTime(source.readLong());
+                    story.setFavourite(source.readInt());
+                    return story;
+                }
+
+                @Override
+                public Story[] newArray(int size) {
+                    return new Story[size];
+                }
+
+            };
 }

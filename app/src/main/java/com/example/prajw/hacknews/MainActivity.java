@@ -88,16 +88,13 @@ public class MainActivity extends AppCompatActivity {
    // FavouriteActivity favourite;
 
 
-   /* @Override
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("top"
-                , (ArrayList<? extends Parcelable>) topAdapter.getList());
-        outState.putParcelableArrayList("recent"
-                , (ArrayList<? extends Parcelable>) recentAdapter.getList());
-        outState.putParcelableArrayList("best"
-                , (ArrayList<? extends Parcelable>) bestAdapter.getList());
-    }*/
+        outState.putParcelableArrayList("top", (ArrayList<? extends Parcelable>) topAdapter.getList());
+        outState.putParcelableArrayList("recent", (ArrayList<? extends Parcelable>) recentAdapter.getList());
+        outState.putParcelableArrayList("best", (ArrayList<? extends Parcelable>) bestAdapter.getList());
+    }
 
 
     @Override
@@ -106,34 +103,35 @@ public class MainActivity extends AppCompatActivity {
         if(firebaseAuthListener!= null){
             mAuth.removeAuthStateListener(firebaseAuthListener);}
 
-            firebaseFirestore.collection("Users").document(uid).collection("fav").add(bestAdapter.getFavourites());
-
+            if(mAuth.getCurrentUser()!= null){
+                //firebaseFirestore.collection("Users").document(uid).collection("fav").add(bestAdapter.getFavourites());
+            }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        viewPager = findViewById(R.id.container);
 
         listParent = findViewById(R.id.tab_container);
         TabLayout listTabs = findViewById(R.id.tabs);
+        viewPager = findViewById(R.id.container);
         listTabs.setupWithViewPager(viewPager);
         //progressBar.setVisibility(View.VISIBLE);
         //favourite = (FavouriteActivity)getApplicationContext();
         bestAdapter = new RecyclerViewPageAdapter(this,0);
-        recentAdapter = new RecyclerViewPageAdapter(this,0);
-        topAdapter = new RecyclerViewPageAdapter(this,0);
+        recentAdapter = new RecyclerViewPageAdapter(this,1);
+        topAdapter = new RecyclerViewPageAdapter(this,2);
         //favourite.favouriteAdapter = new RecyclerViewPageAdapter(this,1);
 
-        if (savedInstanceState != null) {
+      /* if (savedInstanceState != null) {
             // progressBar.setVisibility(View.GONE);
-            // bestAdapter.getList(savedInstanceState.getParcelableArrayList("top"));
-            //topAdapter.setList(savedInstanceState.getParcelableArrayList("recent"));
-            //recentAdapter.setList(savedInstanceState.getParcelableArrayList("best"));
+             //bestAdapter.setList(savedInstanceState.getParcelableArrayList("top"));
+             //topAdapter.setList(savedInstanceState.getParcelableArrayList("recent"));
+             //recentAdapter.setList(savedInstanceState.getParcelableArrayList("best"));
             ;;
-        }else {
-            for(i = 0; i<2 ; i++){
+        }else {*/
+            for(i = 0; i<3 ; i++){
 
                 String url = getString(j[i]);
                 //String url = getString(R.string.topstories);
@@ -176,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
             };*/
 
-        }
+        //}
         viewPager.setAdapter(new CustomListPagerAdapter());
         viewPager.setCurrentItem(CustomListPagerAdapter.RECENT_TAB);
         //top = jsonrequest(getString(R.string.topstories));
@@ -184,44 +182,6 @@ public class MainActivity extends AppCompatActivity {
         //recent= jsonrequest(getString(R.string.newstories));
         //Log.d("dcscd",recent.toString());
 
-        /** mAuth = FirebaseAuth.getInstance();
-         firebaseFirestore = FirebaseFirestore.getInstance();
-
-         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
-        @Override
-        public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-
-        FirebaseUser user =firebaseAuth.getCurrentUser();
-        if(user == null){
-        startActivity(new Intent(MainActivity.this, LoginActivity.class));
-        finish();
-        }else{
-
-        firebaseFirestore.collection("Users").document(user.getUid().toString()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-        @Override
-        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-        if (task.isSuccessful()) {
-
-        if (task.getResult().exists()) {
-
-
-        } else {
-        Toast.makeText(MainActivity.this, "Data doesn't exists", Toast.LENGTH_LONG).show();
-        startActivity(new Intent(MainActivity.this, ProfileActivity.class).putExtra("start","1"));
-        finish();
-        }
-        } else {
-        String error = task.getException().getMessage();
-        Toast.makeText(MainActivity.this, "(Firestore Retrieve)error: " + error, Toast.LENGTH_LONG).show();
-
-        }
-        }
-        });
-
-        }
-        }
-        };*/
         Log.d("ddxd0","cdc");
         setupFirebaseAuth();
         setupBottomNavigation();
@@ -243,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
                 }else{
                     best = new ArrayList<>();
                 }
-                Log.d(TAG, response);
+                Log.d(TAG+String.valueOf(ch), response);
                 StringTokenizer stringTokenizer =
                         new StringTokenizer(response, "[,]");
                 while (stringTokenizer.hasMoreTokens()) {
@@ -259,52 +219,7 @@ public class MainActivity extends AppCompatActivity {
                         best.add(story);
                     }
                 }
-                /*if (!response.isNull("selectedStudents")
-                        && !response.getString("selectedStudents").equals("")) {
-                    String selectedStudents = response.getString("selectedStudents");
-                    selectedStudents = selectedStudents.replace("\"[", "");
-                    selectedStudents = selectedStudents.replace("]\"", "");
-                    StringTokenizer stringTokenizer =
-                            new StringTokenizer(selectedStudents, ",");
-                    Log.d(TAG, selectedStudents);
-                    while (stringTokenizer.hasMoreTokens()) {
-                        String username = stringTokenizer.nextToken();
-                        Student student = new Student();
-                        student.setUsername(username);
-                        student.setSelected(true);
-                        selected.add(student);
-                    }
-                }*/
 
-             /*   String url = getString(R.string.URL_GET_LIST)
-                        + User.getInstance(getApplicationContext()).getUsername()
-                        + "/";
-                JsonArrayRequest getList = new JsonArrayRequest(url,
-                        new Response.Listener<JSONArray>() {
-                            @Override
-                            public void onResponse(JSONArray response) {
-                                try {
-                                    List<Student> all = new ArrayList<>();
-                                    List<Student> unselected = new ArrayList<>();
-                                    for (int i = 0; i < response.length(); i++) {
-                                        String username = response
-                                                .getJSONObject(i)
-                                                .getString("username");
-                                        Student student = new Student();
-                                        student.setUsername(username);
-                                        if (selected.contains(student)) {
-                                            selected.contains(student);
-                                            student.setSelected(true);
-                                        } else {
-                                            student.setSelected(false);
-                                            unselected.add(student);
-                                        }
-                                        all.add(student);
-
-
-                                    }
-                                    Log.d(TAG, "Selected Students " + selected.toString());
-                                    */
                 if(ch==0){
                     new GetDetailsTask("Top", top, topAdapter).execute();
                 }else if(ch==2){
@@ -312,32 +227,6 @@ public class MainActivity extends AppCompatActivity {
                 }else{
                     new GetDetailsTask("Best", best, bestAdapter).execute();
                 }
-
-                //new GetDetailsTask("Selected", selected, mSelectedAdapter).execute();
-                //new GetDetailsTask("Unselected", unselected, mUnselectedAdapter).execute();
-                                    /*
-                                } catch (Exception e) {
-                                    Log.d(TAG, e.getMessage());
-
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.d(TAG, error.getMessage());
-                            }
-                        }) {
-                    @Override
-                    public Map<String, String> getHeaders() {
-                        Map<String, String> params = new HashMap<>();
-                        params.put("Authorization", "Token "
-                                + User.getInstance(getApplicationContext()).getToken());
-                        return params;
-                    }
-
-                };
-                VolleyHelper.getInstance(getApplicationContext()).addToRequestQueue(getList);*/
 
             } catch (Exception e) {
                 Log.d(TAG, e.getMessage());
@@ -357,7 +246,6 @@ public class MainActivity extends AppCompatActivity {
             this.adapter = adapter;
             this.stories = stories;
         }
-
         @Override
         protected Void doInBackground(Void... voids) {
             try{if (stories.size() > 0)
@@ -386,38 +274,32 @@ public class MainActivity extends AppCompatActivity {
                                 s.setScore(response.getInt("score"));
                                 s.setTime(response.getLong("time"));
                                 s.setTitle(response.getString("title"));
-                                adapter.addStory(s);
+                                s.setFavourite(0);
+                                adapter.addStory(s);adapter.notifyDataSetChanged();
                                 //Log.d(TAG, "Get details " + student.getUsername() + "");
                                 //if (listType.equals("Top"))
                                 //progressBar.setVisibility(View.GONE);
                             } catch (Exception e) {
                                 Log.d(TAG, e.getMessage());
                             }
+                            Log.d("dcsddc",s.toString());
                         }
+
                     },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             Log.d(TAG, "Volley Error" + error.getMessage());
                         }
-                    })/* {
-                @Override
-                public Map<String, String> getHeaders() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("Authorization", "Token "
-                            + User.getInstance(getApplicationContext()).getToken());
-                    return params;
-                }
-            }*/;
+                    });
+
             MySingleton.getInstance(getApplicationContext()).addToRequestQueue(getDetails);
         }
     }
 
-
     private void checkCurrentUser(FirebaseUser user){
 
         Log.d(TAG, "checkCurrentUser: checking if user is logged in."+String.valueOf(ctr));ctr++;
-
         if(user == null){
             Intent intent = new Intent(mContext, LoginActivity.class);
             startActivity(intent);finish();
@@ -481,7 +363,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("sfsf","aaad00");
         mAuth.addAuthStateListener(firebaseAuthListener);
         Log.d("dad","dsad");
-        viewPager.setCurrentItem(HOME_FRAGMENT);
+        //viewPager.setCurrentItem(HOME_FRAGMENT);
         //checkCurrentUser(mAuth.getCurrentUser());
     }
 
@@ -539,25 +421,27 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Object instantiateItem(ViewGroup container, int tabPosition) {
-            LayoutInflater inflater = (LayoutInflater) getApplication().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            ViewGroup layout = (ViewGroup) inflater.inflate(layouts[tabPosition], container, false);
+            LayoutInflater inflater = (LayoutInflater)
+                    getApplication().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            ViewGroup layout = (ViewGroup) inflater.inflate(layouts[tabPosition],
+                    container, false);
             container.addView(layout);
 
             RecyclerView rv = layout.findViewById(ids[tabPosition]);
             rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
             rv.setNestedScrollingEnabled(false);
             if (tabPosition == TOP_TAB) {
+                topAdapter.notifyDataSetChanged();
                 rv.setAdapter(topAdapter);
             } else if (tabPosition == RECENT_TAB) {
+                recentAdapter.notifyDataSetChanged();
                 rv.setAdapter(recentAdapter);
             } else if (tabPosition == BEST_TAB) {
+                bestAdapter.notifyDataSetChanged();
                 rv.setAdapter(bestAdapter);
-
             }
             return layout;
         }
-
-
         @Override
         public void destroyItem(ViewGroup container, int tabPosition, Object object) {
             container.removeView((View) object);

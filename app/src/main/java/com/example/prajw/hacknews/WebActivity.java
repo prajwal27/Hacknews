@@ -12,6 +12,8 @@ import android.widget.ProgressBar;
 
 import com.example.prajw.hacknews.R;
 
+import static android.view.View.GONE;
+
 public class WebActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
@@ -36,10 +38,15 @@ public class WebActivity extends AppCompatActivity {
             }
         });
 
-        webView.setVisibility(View.INVISIBLE);
+        webView.setWebViewClient(new MyBrowser());
+        webView.getSettings().setLoadsImagesAutomatically(true);
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.setWebChromeClient(new WebChromeClient());
-        webView.setWebViewClient(new WebViewClient(){
+        webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+
+        //webView.setVisibility(View.VISIBLE);
+        //webView.getSettings().setJavaScriptEnabled(true);
+        //webView.setWebChromeClient(new WebChromeClient());
+        /*webView.setWebViewClient(new WebViewClient(){
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -52,8 +59,16 @@ public class WebActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 webView.setVisibility(View.VISIBLE);
             }
-        });
+        });*/
 
         webView.loadUrl(getIntent().getStringExtra("url"));
+    }
+
+    private class MyBrowser extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
     }
 }
