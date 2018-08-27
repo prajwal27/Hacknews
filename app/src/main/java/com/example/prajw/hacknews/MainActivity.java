@@ -2,6 +2,7 @@ package com.example.prajw.hacknews;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -30,6 +31,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.prajw.hacknews.LoginActivity;
 import com.example.prajw.hacknews.BottomNavigationViewHelper;
 import com.example.prajw.hacknews.MySingleton;
@@ -77,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
     private JsonObjectRequest jsonObjectRequest;
     //private String urll;
     public static ArrayList<Story> top,best,recent ;
+    public ArrayList<Long> favourites = new ArrayList<Long>();
     // ArrayList<Story> tempo = new ArrayList<Story>();
     private RelativeLayout listParent;
     //private ProgressBar progressBar;
@@ -100,18 +104,52 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if(firebaseAuthListener!= null){
-            mAuth.removeAuthStateListener(firebaseAuthListener);}
 
             if(mAuth.getCurrentUser()!= null){
-                //firebaseFirestore.collection("Users").document(uid).collection("fav").add(bestAdapter.getFavourites());
+                Map<String, ArrayList<Long> > userMap = new HashMap<String, ArrayList<Long>>();
+                userMap.put("idk",this.favourites );
+                firebaseFirestore.collection("Users").document(uid).collection("fav").document("lists").set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                        if(task.isSuccessful()){
+                            Log.d("bbdksbckb","nndefncenf");
+                        }else{
+                            Log.d("k kc ak cddc ","nckdncdncdscdcndslj");
+                        }
+                    }
+                });
             }
+        if(firebaseAuthListener!= null){
+            mAuth.removeAuthStateListener(firebaseAuthListener);}
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        firebaseFirestore.collection("Users").document(uid).collection("fav").document("lists").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+
+                    if (task.getResult().exists()) {
+
+                        favourites = (ArrayList<Long>) task.getResult().get("idk");
+
+                    }else{
+
+                        favourites = new ArrayList<Long>();
+                        Toast.makeText(MainActivity.this,"Data doesn't exists",Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    String error = task.getException().getMessage();
+                    Toast.makeText(MainActivity.this, "(Firestore Retrieve)error: " + error, Toast.LENGTH_LONG).show();
+
+                }
+            }
+        });
 
         listParent = findViewById(R.id.tab_container);
         TabLayout listTabs = findViewById(R.id.tabs);
@@ -122,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
         bestAdapter = new RecyclerViewPageAdapter(this,0);
         recentAdapter = new RecyclerViewPageAdapter(this,1);
         topAdapter = new RecyclerViewPageAdapter(this,2);
+
         //favourite.favouriteAdapter = new RecyclerViewPageAdapter(this,1);
 
       /* if (savedInstanceState != null) {
@@ -362,6 +401,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         Log.d("sfsf","aaad00");
         mAuth.addAuthStateListener(firebaseAuthListener);
+
         Log.d("dad","dsad");
         //viewPager.setCurrentItem(HOME_FRAGMENT);
         //checkCurrentUser(mAuth.getCurrentUser());

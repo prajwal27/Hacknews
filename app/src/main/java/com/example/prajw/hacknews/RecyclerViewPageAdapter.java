@@ -26,7 +26,7 @@ import java.util.List;
  class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPageAdapter.MyViewHolder>{
     private static final String TAG = "ListViewAdapter";
     private List<Story> stories = new ArrayList<Story>();
-    private List<Story> favourites = new ArrayList<Story>();
+    //private List<Story> favourites = new ArrayList<Story>();
     private Context context;
     private static final int ALPHA_ANIMATION_TIME = 200;
     final static int RECENT = 1;
@@ -38,9 +38,9 @@ import java.util.List;
 
     public RecyclerViewPageAdapter(Context context, int identifier /*, List<Story> stories*/){
         //this.stories = stories;
-        //if(identifier !=0) {
-          //  favouriteActivity = (FavouriteActivity) context;
-        //}
+        if(identifier !=0) {
+            favouriteActivity = (FavouriteActivity) context;
+        }
         activity = (MainActivity)context;
         this.context = context;
 
@@ -101,7 +101,7 @@ import java.util.List;
         holder.comments_vh.setText(String.valueOf(stories.get(position).getDescendants()));
         holder.time_vh.setText(String.valueOf(stories.get(position).getTime()));
 
-        if (stories.get(holder.getAdapterPosition()).getFavourite()==1)
+        if (activity.favourites.contains(stories.get(holder.getAdapterPosition()).getId()))
             holder.heart.setImageResource(R.drawable.ic_favorite_black_24dp);
         else
             holder.heart.setImageResource(R.drawable.border_fav_story);
@@ -110,24 +110,22 @@ import java.util.List;
             @Override
             public void onClick(View v) {
                 //To prevent double clicks
-                v.setClickable(false);
-                holder.itemView.setClickable(false);
+                //v.setClickable(false);
+                //holder.itemView.setClickable(false);
+                if(identifier !=1){
+                if (activity.favourites.contains(stories.get(holder.getAdapterPosition()).getId())) {
 
-                //Depending on whether the student is present in selected list or not
-                //changes are carried out to all,unselected and selected list.
-
-                if (stories.get(holder.getAdapterPosition()).getFavourite()==1) {
-
-                    favourites.add(stories.get(holder.getAdapterPosition()));
-                    stories.get(holder.getAdapterPosition()).setFavourite(0);
+                    activity.favourites.remove(stories.get(holder.getAdapterPosition()).getId());
+                    //favourites.add(stories.get(holder.getAdapterPosition()));
+                    //stories.get(holder.getAdapterPosition()).setFavourite(0);
                     holder.heart.setImageResource(R.drawable.border_fav_story);
-                    if(identifier==0){
+                    /*if(identifier==0){
                         activity.topAdapter.notifyDataSetChanged();
                     }else if(identifier == 1){
                         activity.recentAdapter.notifyDataSetChanged();
                     }else{
                         activity.bestAdapter.notifyDataSetChanged();
-                    }
+                    }*/
 
                    //   favouriteActivity.favouriteAdapter.addStory(stories.get(holder.getAdapterPosition()));
                     // **** activity.removeStory(stories.get(holder.getAdapterPosition()));
@@ -138,18 +136,19 @@ import java.util.List;
                     //else
                     //  activity.mAllAdapter.notifyDataSetChanged();
                 } else {
-                    favourites.remove(stories.get(holder.getAdapterPosition()));
-                    stories.get(holder.getAdapterPosition()).setFavourite(1);
+                    //favourites.remove(stories.get(holder.getAdapterPosition()));
+                    activity.favourites.add(stories.get(holder.getAdapterPosition()).getId());
+                    //stories.get(holder.getAdapterPosition()).setFavourite(1);
                     ////  *** activity..addStory(stories.get(holder.getAdapterPosition()));
                     holder.heart.setImageResource(R.drawable.ic_favorite_black_24dp);
 
-                    if(identifier == 0){
+                    /*if(identifier == 0){
                         activity.topAdapter.notifyDataSetChanged();
                     }else if(identifier == 1){
                         activity.recentAdapter.notifyDataSetChanged();
                     }else{
                         activity.bestAdapter.notifyDataSetChanged();
-                    }
+                    }*/
                     //favouriteActivity.favouriteAdapter.removeStory(stories.get(holder.getAdapterPosition()));
                     //  activity.mUnselectedAdapter
                     //         .removeStudent(students.get(holder.getAdapterPosition()));
@@ -158,7 +157,7 @@ import java.util.List;
                     //else
                     //  activity.mAllAdapter.notifyDataSetChanged();
                 }
-            }
+            }}
         });
 
         holder.detailed.setOnClickListener(new View.OnClickListener() {
@@ -168,9 +167,7 @@ import java.util.List;
                 context.startActivity(new Intent(context,WebActivity.class).putExtra("url",stories.get(holder.getAdapterPosition()).getUrl()));
             }
         });
-
     }
-
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
@@ -203,5 +200,4 @@ import java.util.List;
         itemView.setAnimation(animationSet);
         itemView.animate();
     }
-
 }
