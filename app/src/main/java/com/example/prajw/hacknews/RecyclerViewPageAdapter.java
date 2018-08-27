@@ -1,4 +1,4 @@
-package com.example.prajw.hacknews.Common;
+package com.example.prajw.hacknews;
 
 import android.content.Context;
 import android.content.Intent;

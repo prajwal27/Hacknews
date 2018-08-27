@@ -30,15 +30,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.example.prajw.hackernews.Authentication.LoginActivity;
-import com.example.prajw.hackernews.Common.BottomNavigationViewHelper;
-import com.example.prajw.hackernews.Common.MySingleton;
-import com.example.prajw.hackernews.Common.RecyclerViewPageAdapter;
-import com.example.prajw.hackernews.Common.Story;
-import com.example.prajw.hackernews.Home.BestFragment;
-import com.example.prajw.hackernews.Home.RecentFragment;
-import com.example.prajw.hackernews.Home.SectionsPageAdapter;
-import com.example.prajw.hackernews.Home.TopFragment;
+import com.example.prajw.hacknews.LoginActivity;
+import com.example.prajw.hacknews.BottomNavigationViewHelper;
+import com.example.prajw.hacknews.MySingleton;
+import com.example.prajw.hacknews.RecyclerViewPageAdapter;
+import com.example.prajw.hacknews.Story;
+//import com.example.prajw.hacknews.BestFragment;
+//import com.example.prajw.hacknews.RecentFragment;
+import com.example.prajw.hacknews.SectionsPageAdapter;
+//import com.example.prajw.hackernews.Home.TopFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -488,7 +488,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * this is for setting up 3 tabs
      */
-    private void setupViewPager(){
+     /* private void setupViewPager(){
         SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager());
         adapter.addFragment(new TopFragment());
         adapter.addFragment(new RecentFragment());
@@ -500,7 +500,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(0).setText("TOP");
         tabLayout.getTabAt(1).setText("RECENT");
         tabLayout.getTabAt(2).setText("BEST");
-    }
+    }*/
 
     /**
      * Tabview + pager for the custom list.

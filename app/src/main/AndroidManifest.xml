@@ -29,11 +29,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Authentication.LoginActivity" />
+        <activity android:name=".LoginActivity" />
 
-        <activity android:name=".Authentication.ForgotPassword" />
+        <activity android:name=".ForgotPassword" />
 
-        <activity android:name=".Authentication.RegisterActivity" />
+        <activity android:name=".RegisterActivity" />
 
         <activity android:name=".ProfileActivity" />
 
@@ -43,9 +43,9 @@
 
         <activity android:name=".AccountSettingsActivity" />
 
-        <activity android:name=".Common.WebActivity" />
+        <activity android:name=".WebActivity" />
 
-        <activity android:name=".Trial"></activity>
+
     </application>
 
 </manifest>

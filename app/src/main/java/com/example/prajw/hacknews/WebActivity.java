@@ -1,4 +1,4 @@
-package com.example.prajw.hackernews.Common;
+package com.example.prajw.hacknews;
 
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;

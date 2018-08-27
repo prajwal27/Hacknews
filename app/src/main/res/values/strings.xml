@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">HackerNews</string>
+    <string name="app_name">Hacknews</string>
+    <string name="item">https://hacker-news.firebaseio.com/v0/item/</string>
+    <string name="topstories">https://hacker-news.firebaseio.com/v0/topstories.json</string>
+    <string name="beststories">https://hacker-news.firebaseio.com/v0/beststories.json</string>
+    <string name="newstories">https://hacker-news.firebaseio.com/v0/newstories.json</string>
+
 </resources>

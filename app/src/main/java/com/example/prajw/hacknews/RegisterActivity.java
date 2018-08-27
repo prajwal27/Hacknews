@@ -11,8 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.prajw.hackernews.ProfileActivity;
-import com.example.prajw.hackernews.R;
+import com.example.prajw.hacknews.ProfileActivity;
+import com.example.prajw.hacknews.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;

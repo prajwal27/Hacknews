@@ -12,9 +12,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.prajw.hackernews.MainActivity;
-import com.example.prajw.hackernews.R;
-import com.example.prajw.hackernews.Trial;
+import com.example.prajw.hacknews.MainActivity;
+import com.example.prajw.hacknews.R;
+//import com.example.prajw.hacknews.Trial;
+import com.example.prajw.hacknews.RegisterActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -99,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
     private void sendToMain() {
-        Intent intent = new Intent(LoginActivity.this,Trial.class);
+        Intent intent = new Intent(LoginActivity.this,MainActivity.class);
         startActivity(intent);
         finish();
     }
