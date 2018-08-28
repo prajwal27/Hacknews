@@ -129,37 +129,31 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        firebaseFirestore.collection("Users").document(uid).collection("fav").document("lists").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-
-                    if (task.getResult().exists()) {
-
-                        favourites = (ArrayList<Long>) task.getResult().get("idk");
-
-                    }else{
-
-                        favourites = new ArrayList<Long>();
-                        Toast.makeText(MainActivity.this,"Data doesn't exists",Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    String error = task.getException().getMessage();
-                    Toast.makeText(MainActivity.this, "(Firestore Retrieve)error: " + error, Toast.LENGTH_LONG).show();
-
-                }
-            }
-        });
-
         listParent = findViewById(R.id.tab_container);
         TabLayout listTabs = findViewById(R.id.tabs);
         viewPager = findViewById(R.id.container);
         listTabs.setupWithViewPager(viewPager);
+        viewPager.setAdapter(new CustomListPagerAdapter());
+        viewPager.setCurrentItem(CustomListPagerAdapter.RECENT_TAB);
+        Log.d("ddxd0","cdc");
+        setupFirebaseAuth();
+        setupBottomNavigation();
+        Log.d("ddsd","ac");
+
+        if(mAuth.getCurrentUser() == null){
+            startActivity(new Intent(MainActivity.this,LoginActivity.class));
+        }
+        //firebaseFirestore = FirebaseFirestore.getInstance();
+
+
+
         //progressBar.setVisibility(View.VISIBLE);
         //favourite = (FavouriteActivity)getApplicationContext();
         bestAdapter = new RecyclerViewPageAdapter(this,0);
-        recentAdapter = new RecyclerViewPageAdapter(this,1);
-        topAdapter = new RecyclerViewPageAdapter(this,2);
+        recentAdapter = new RecyclerViewPageAdapter(this,0);
+        topAdapter = new RecyclerViewPageAdapter(this,0);
+
+
 
         //favourite.favouriteAdapter = new RecyclerViewPageAdapter(this,1);
 
@@ -214,17 +208,12 @@ public class MainActivity extends AppCompatActivity {
             };*/
 
         //}
-        viewPager.setAdapter(new CustomListPagerAdapter());
-        viewPager.setCurrentItem(CustomListPagerAdapter.RECENT_TAB);
         //top = jsonrequest(getString(R.string.topstories));
         //best = jsonrequest(getString(R.string.beststories));
         //recent= jsonrequest(getString(R.string.newstories));
         //Log.d("dcscd",recent.toString());
 
-        Log.d("ddxd0","cdc");
-        setupFirebaseAuth();
-        setupBottomNavigation();
-        Log.d("ddsd","ac");
+
         //setupViewPager();
     }
 
@@ -365,8 +354,8 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     firebaseFirestore = FirebaseFirestore.getInstance();
                     storageReference = FirebaseStorage.getInstance().getReference();
-                    uid = user.getUid();
-                    firebaseFirestore.collection("Users").document(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    uid = mAuth.getCurrentUser().getUid();
+                    firebaseFirestore.collection("Users").document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
@@ -379,6 +368,29 @@ public class MainActivity extends AppCompatActivity {
                                     Toast.makeText(MainActivity.this, "Data doesn't exists", Toast.LENGTH_LONG).show();
                                     startActivity(new Intent(MainActivity.this, ProfileActivity.class).putExtra("start","1"));
                                     finish();
+                                }
+                            } else {
+                                String error = task.getException().getMessage();
+                                Toast.makeText(MainActivity.this, "(Firestore Retrieve)error: " + error, Toast.LENGTH_LONG).show();
+
+                            }
+                        }
+                    });
+
+                    firebaseFirestore.collection("Users").document(uid).collection("fav").document("lists").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+
+                                if (task.getResult().exists()) {
+
+                                    Toast.makeText(MainActivity.this,"Fav data exist",Toast.LENGTH_LONG).show();
+                                    favourites = (ArrayList<Long>) task.getResult().get("idk");
+
+                                }else{
+
+                                    favourites = new ArrayList<Long>();
+                                    Toast.makeText(MainActivity.this,"Fav data doesnt exist",Toast.LENGTH_LONG).show();
                                 }
                             } else {
                                 String error = task.getException().getMessage();

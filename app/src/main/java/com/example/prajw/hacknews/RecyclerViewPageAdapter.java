@@ -26,7 +26,7 @@ import java.util.List;
  class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPageAdapter.MyViewHolder>{
     private static final String TAG = "ListViewAdapter";
     private List<Story> stories = new ArrayList<Story>();
-    //private List<Story> favourites = new ArrayList<Story>();
+    private List<Story> favourites = new ArrayList<Story>();
     private Context context;
     private static final int ALPHA_ANIMATION_TIME = 200;
     final static int RECENT = 1;
@@ -39,9 +39,9 @@ import java.util.List;
     public RecyclerViewPageAdapter(Context context, int identifier /*, List<Story> stories*/){
         //this.stories = stories;
         if(identifier !=0) {
-            favouriteActivity = (FavouriteActivity) context;
-        }
-        activity = (MainActivity)context;
+          favouriteActivity = (FavouriteActivity) context;
+        }else{
+        activity = (MainActivity)context;}
         this.context = context;
 
     }
@@ -97,14 +97,21 @@ import java.util.List;
 
         holder.by_vh.setText(stories.get(position).getBy());
         holder.title_vh.setText(stories.get(position).getTitle());
-        holder.likes_vh.setText(String.valueOf(stories.get(position).getScore()));
-        holder.comments_vh.setText(String.valueOf(stories.get(position).getDescendants()));
+        holder.likes_vh.setText(String.valueOf(stories.get(position).getScore())+" Likes");
+        holder.comments_vh.setText(String.valueOf(stories.get(position).getDescendants())+" Comments");
         holder.time_vh.setText(String.valueOf(stories.get(position).getTime()));
 
-        if (activity.favourites.contains(stories.get(holder.getAdapterPosition()).getId()))
-            holder.heart.setImageResource(R.drawable.ic_favorite_black_24dp);
-        else
-            holder.heart.setImageResource(R.drawable.border_fav_story);
+        if(identifier ==0) {
+            if (activity.favourites.contains(stories.get(holder.getAdapterPosition()).getId()))
+                holder.heart.setImageResource(R.drawable.ic_favorite_black_24dp);
+            else
+                holder.heart.setImageResource(R.drawable.border_fav_story);
+        }else{
+            if (favouriteActivity.favourites.contains(stories.get(holder.getAdapterPosition()).getId()))
+                holder.heart.setImageResource(R.drawable.ic_favorite_black_24dp);
+            else
+                holder.heart.setImageResource(R.drawable.border_fav_story);
+        }
 
         holder.heart.setOnClickListener(new View.OnClickListener() {
             @Override

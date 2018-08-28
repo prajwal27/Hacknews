@@ -38,15 +38,14 @@ import static com.android.volley.Request.Method.GET;
 public class FavouriteActivity extends AppCompatActivity {
 
     RecyclerViewPageAdapter favouriteAdapter;
-    private RecyclerView recyclerView;
     FirebaseAuth mAuth;
     FirebaseFirestore firebaseFirestore;
-    private ArrayList<Long> fav;
+    ArrayList<Long> favourites = new ArrayList<Long>();
     String uid;
     private Long id;
     JsonObjectRequest jsonObjectRequest;
     RecyclerViewPageAdapter recyclerViewPageAdapter;
-
+    LinearLayoutManager linearLayoutManager;
     @Override
     protected void onStart() {
         super.onStart();
@@ -56,16 +55,23 @@ public class FavouriteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        recyclerView = findViewById(R.id.recyclerViewFav);
+        setContentView(R.layout.activity_favourite);
+
+        setupBottomNavigation();
+
+        final RecyclerView recyclerView = findViewById(R.id.recyclerView_fav);
         mAuth = FirebaseAuth.getInstance();
         uid = mAuth.getCurrentUser().getUid();
         firebaseFirestore = FirebaseFirestore.getInstance();
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        Log.d("addd","deddeed");
+        linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerViewPageAdapter = new RecyclerViewPageAdapter(this,1);
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
-        recyclerViewPageAdapter = new RecyclerViewPageAdapter(getApplicationContext(),1);
-        recyclerView.setAdapter(recyclerViewPageAdapter);
 
+        recyclerView.setAdapter(recyclerViewPageAdapter);
+        Toast.makeText(this,uid,Toast.LENGTH_LONG);
         firebaseFirestore.collection("Users").document(uid).collection("fav").document("lists").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -73,12 +79,14 @@ public class FavouriteActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
 
                     if (task.getResult().exists()) {
+                        favourites = (ArrayList<Long>)task.getResult().get("lists");
 
-                        fav = (ArrayList<Long>)task.getResult().get("lists");
+                        Toast.makeText(FavouriteActivity.this,"Fav data exist  "+String.valueOf(favourites.size()),Toast.LENGTH_LONG).show();
+
 
                     }else{
 
-                        fav = new ArrayList<Long>();
+                        favourites = new ArrayList<Long>();
                         Toast.makeText(FavouriteActivity.this,"Data doesn't exists",Toast.LENGTH_LONG).show();
                     }
                 } else {
@@ -89,10 +97,10 @@ public class FavouriteActivity extends AppCompatActivity {
             }
         });
 
-        if(fav.size()>0)
+        if(favourites.size()>0)
         {
-            for(int i=0;i<fav.size(); i++){
-                id = fav.get(i);
+            for(int i=0;i<favourites.size(); i++){
+                id = favourites.get(i);
                 String url = getString(R.string.item)+String.valueOf(id)+".json";
                 jsonObjectRequest = new JsonObjectRequest(GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
@@ -112,7 +120,8 @@ public class FavouriteActivity extends AppCompatActivity {
                         }
 
                         recyclerViewPageAdapter.addStory(s);
-                       // recyclerViewPageAdapter.notifyDataSetChanged();
+                        recyclerView.setAdapter(recyclerViewPageAdapter);
+                        recyclerViewPageAdapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -120,14 +129,10 @@ public class FavouriteActivity extends AppCompatActivity {
 
                     }
                 });
-
                 MySingleton.getInstance(getApplication().getApplicationContext()).addToRequestQueue(jsonObjectRequest);
-
             }
-
         }
 
-        setupBottomNavigation();
 
     }
 
@@ -138,6 +143,7 @@ public class FavouriteActivity extends AppCompatActivity {
         Menu menu = bottomNavigationViewEx.getMenu();
         MenuItem menuItem = menu.getItem(2);
         menuItem.setChecked(true);
+        Log.d("nininin","inidnedn");
     }
 
 }
