@@ -50,6 +50,7 @@
         </android.support.constraint.ConstraintLayout>
 
         <RelativeLayout
+            android:visibility="invisible"
             android:id="@+id/user_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

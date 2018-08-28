@@ -30,6 +30,7 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
@@ -79,7 +80,7 @@ public class FavouriteActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
 
                     if (task.getResult().exists()) {
-                        favourites = (ArrayList<Long>)task.getResult().get("lists");
+                        favourites = (ArrayList<Long>) task.getResult().get("lists");
 
                         Toast.makeText(FavouriteActivity.this,"Fav data exist  "+String.valueOf(favourites.size()),Toast.LENGTH_LONG).show();
 
