@@ -19,7 +19,7 @@ import java.util.List;
 public class RecyclerViewSearchAdapter extends RecyclerView.Adapter<RecyclerViewSearchAdapter.MyViewHolder> {
     private static final String TAG = "ListViewAdapter";
     private List<Story> stories = new ArrayList<Story>();
-    private List<Story> favourites = new ArrayList<Story>();
+    //private List<Integer> comment_list = new ArrayList<Integer>();
     private Context context;
     private static final int ALPHA_ANIMATION_TIME = 200;
     final static int RECENT = 1;
@@ -71,7 +71,11 @@ public class RecyclerViewSearchAdapter extends RecyclerView.Adapter<RecyclerView
             @Override
             public void onClick(View v) {
 
-                context.startActivity(new Intent(context,WebActivity.class).putExtra("url",stories.get(holder.getAdapterPosition()).getUrl()));
+                Intent intent = new Intent(context,WebActivity.class);
+                intent.putExtra("url",stories.get(holder.getAdapterPosition()).getUrl());
+                intent.putExtra("comment_ids",stories.get(holder.getAdapterPosition()).getCommentList());
+
+
             }
         });
 

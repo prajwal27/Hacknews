@@ -3,12 +3,23 @@ package com.example.prajw.hacknews;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 public class Story implements Parcelable {
 
     private String by, title, url;
     private int descendants, score;
     private long id, time;
     private int isFavourite;
+    private String commentList;
+
+    public String getCommentList() {
+        return commentList;
+    }
+
+    public void setCommentList(String commentList) {
+        this.commentList = commentList;
+    }
 
     public int getFavourite() {
         return isFavourite;
@@ -23,7 +34,7 @@ public class Story implements Parcelable {
 
     }
 
-    public Story(String by, String title, String url, int descendants, int score, long id, long time) {
+    public Story(String by, String title, String url, int descendants, int score, long id, long time, String commentList) {
         this.by = by;
         this.title = title;
         this.url = url;
@@ -31,6 +42,7 @@ public class Story implements Parcelable {
         this.score = score;
         this.id = id;
         this.time = time;
+        this.commentList = commentList;
     }
 
     @Override

@@ -36,7 +36,16 @@ public class SearchActivity extends AppCompatActivity{
     private EditText searchText;
     private RecyclerViewSearchAdapter recyclerViewSearchAdapter;
     private RecyclerView recyclerView;
+    Listener listener;
+    Object object;
     ArrayList<Long> storyID = new ArrayList<Long>();
+
+    public interface Listener {
+        /** Called when a response is received. */
+        public void onResponse(Object tag, JSONObject response);
+        public void onErrorResponse(Object tag, VolleyError error);
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +65,7 @@ public class SearchActivity extends AppCompatActivity{
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick( View v) {
-
+                //MySingleton.getInstance(v.getContext()).getRequestQueue().cancelAll(object);
                 Toast.makeText(v.getContext()," yooo ",Toast.LENGTH_LONG).show();
                 //storyID.clear();
                 recyclerViewSearchAdapter = new RecyclerViewSearchAdapter(getApplication().getApplicationContext());
@@ -112,6 +121,8 @@ public class SearchActivity extends AppCompatActivity{
                                         @Override
                                         public void onResponse(JSONObject response) {
 
+                                            listener.onResponse(object, response);
+
                                             int desc = 0;
                                             try {
                                                 desc = (response.getInt("descendants"));
@@ -154,9 +165,17 @@ public class SearchActivity extends AppCompatActivity{
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                             }
+                                             String commentList = "1";
+
+                                            try {
+                                               commentList = String.valueOf(response.get("kids"));
+                                                }
+                                             catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
                                             Log.d("search ", "yo");
-                                            if(! title.equals("NO TITLE")){
-                                            Story s = new Story(name,title,website,desc,score,id,time);
+                                            if(!title.equals("NO TITLE") && commentList.length()>1){
+                                            Story s = new Story(name,title,website,desc,score,id,time,commentList);
                                             recyclerViewSearchAdapter.addStory(s);}
                                             //recyclerView.notifyAll();
 
@@ -164,6 +183,7 @@ public class SearchActivity extends AppCompatActivity{
                                     }, new Response.ErrorListener() {
                                         @Override
                                         public void onErrorResponse(VolleyError error) {
+                                            listener.onErrorResponse(object,error);
                                             Toast.makeText(getApplicationContext()," error in deep: "+error,Toast.LENGTH_LONG).show();
                                         }
                                     });
