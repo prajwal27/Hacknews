@@ -72,58 +72,40 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore firebaseFirestore;
     private String uid;
     private int i;
-    private int j[] = {R.string.topstories,R.string.newstories,R.string.beststories};
     private static final String TAG = "MainActivity";
-    private static final int HOME_FRAGMENT = 0  ;
     private Context mContext = MainActivity.this;
-    private static int  ctr =0;
+    private static int ctr = 0;
     private ViewPager viewPager;
-    private StringRequest stringRequest;
-    private JsonObjectRequest jsonObjectRequest;
-    //private String urll;
-    public static ArrayList<Story> top,best,recent ;
     public ArrayList<Long> favourites = new ArrayList<Long>();
-    // ArrayList<Story> tempo = new ArrayList<Story>();
     private RelativeLayout listParent;
     //private ProgressBar progressBar;
     RecyclerViewPageAdapter topAdapter;
     RecyclerViewPageAdapter recentAdapter;
     RecyclerViewPageAdapter bestAdapter;
     private Story s;
-    //RecyclerViewPageAdapter favouriteAdapter;
-   // FavouriteActivity favourite;
-
-
-   /* @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("top", (ArrayList<? extends Parcelable>) topAdapter.getList());
-        outState.putParcelableArrayList("recent", (ArrayList<? extends Parcelable>) recentAdapter.getList());
-        outState.putParcelableArrayList("best", (ArrayList<? extends Parcelable>) bestAdapter.getList());
-    }*/
-
 
     @Override
     protected void onStop() {
         super.onStop();
 
-            if(mAuth.getCurrentUser()!= null){
-                Map<String, ArrayList<Long> > userMap = new HashMap<String, ArrayList<Long>>();
-                userMap.put("idk",this.favourites );
-                firebaseFirestore.collection("Users").document(uid).collection("fav").document("lists").set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
+        if (mAuth.getCurrentUser() != null) {
+            Map<String, ArrayList<Long>> userMap = new HashMap<String, ArrayList<Long>>();
+            userMap.put("idk", this.favourites);
+            firebaseFirestore.collection("Users").document(uid).collection("fav").document("lists").set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
 
-                        if(task.isSuccessful()){
-                            Log.d("bbdksbckb","nndefncenf");
-                        }else{
-                            Log.d("k kc ak cddc ","nckdncdncdscdcndslj");
-                        }
+                    if (task.isSuccessful()) {
+                        Log.d("bbdksbckb", "nndefncenf");
+                    } else {
+                        Log.d("k kc ak cddc ", "nckdncdncdscdcndslj");
                     }
-                });
-            }
-        if(firebaseAuthListener!= null){
-            mAuth.removeAuthStateListener(firebaseAuthListener);}
+                }
+            });
+        }
+        if (firebaseAuthListener != null) {
+            mAuth.removeAuthStateListener(firebaseAuthListener);
+        }
     }
 
     @Override
@@ -131,103 +113,111 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setupFirebaseAuth();
+        setupBottomNavigation();
         listParent = findViewById(R.id.tab_container);
         TabLayout listTabs = findViewById(R.id.tabs);
         viewPager = findViewById(R.id.container);
         listTabs.setupWithViewPager(viewPager);
         viewPager.setAdapter(new CustomListPagerAdapter());
         viewPager.setCurrentItem(CustomListPagerAdapter.RECENT_TAB);
-        Log.d("ddxd0","cdc");
-        setupFirebaseAuth();
-        setupBottomNavigation();
-        Log.d("ddsd","ac");
 
-        if(mAuth.getCurrentUser() == null){
-            startActivity(new Intent(MainActivity.this,LoginActivity.class));
+        if (mAuth.getCurrentUser() == null) {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }
         //firebaseFirestore = FirebaseFirestore.getInstance();
 
-
-
         //progressBar.setVisibility(View.VISIBLE);
         //favourite = (FavouriteActivity)getApplicationContext();
-        bestAdapter = new RecyclerViewPageAdapter(this,0);
-        recentAdapter = new RecyclerViewPageAdapter(this,0);
-        topAdapter = new RecyclerViewPageAdapter(this,0);
+        bestAdapter = new RecyclerViewPageAdapter(this, 0);
+        recentAdapter = new RecyclerViewPageAdapter(this, 0);
+        topAdapter = new RecyclerViewPageAdapter(this, 0);
 
+        StringRequest stringRequest = new StringRequest(GET
+                , getString(R.string.topstories)
+                , new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONObject object = new JSONObject();
+                try {
+                    object.put("response", response);
+                    object.put("int", i);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.d("error on the wall", e.toString());
+                }
+                // new BackgroundListLoadTask().execute(object);
+                StringTokenizer stringTokenizer1 =
+                        new StringTokenizer(response.substring(0, 141), "[,]");
+                while (stringTokenizer1.hasMoreTokens()) {
+                    //Long id1 = Long.valueOf(stringTokenizer1.nextToken());
 
+                    JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(GET, getString(R.string.item) + stringTokenizer1.nextToken() + ".json", null, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                topAdapter.addStory(new Story(response.getString("by"), response.getString("title"), response.getString("url"), response.getInt("descendants"), response.getInt("score"), response.getLong("id"), response.getLong("time")));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Log.d("eacasac: ", response.toString());
+                            }
+                            topAdapter.notifyDataSetChanged();
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
 
-        //favourite.favouriteAdapter = new RecyclerViewPageAdapter(this,1);
-
-      /* if (savedInstanceState != null) {
-            // progressBar.setVisibility(View.GONE);
-             //bestAdapter.setList(savedInstanceState.getParcelableArrayList("top"));
-             //topAdapter.setList(savedInstanceState.getParcelableArrayList("recent"));
-             //recentAdapter.setList(savedInstanceState.getParcelableArrayList("best"));
-            ;;
-        }else {*/
-           // for(i = 0; i<3 ; i++){
-
-                //String url = getString(j[i]);
-                //String url = getString(R.string.topstories);
-                StringRequest stringRequest = new StringRequest(GET
-                        , getString(R.string.topstories)
-                        , new Response.Listener<String>() {
-
+                        }
+                    });
+                    MySingleton.getInstance(getApplication().getApplicationContext()).addToRequestQueue(jsonObjectRequest1);
+                }
+                StringRequest stringRequest2 = new StringRequest(GET, getString(R.string.newstories), new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        JSONObject object = new JSONObject();
-                        try {
-                            object.put("response",response);
-                            object.put("int",i);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            Log.d("error on the wall",e.toString());
-                        }
-                       // new BackgroundListLoadTask().execute(object);
-                        StringTokenizer stringTokenizer1 =
-                                new StringTokenizer(response.substring(0,141), "[,]");
-                        while (stringTokenizer1.hasMoreTokens()) {
-                            //Long id1 = Long.valueOf(stringTokenizer1.nextToken());
 
-                            JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(GET, getString(R.string.item) + stringTokenizer1.nextToken() + ".json", null, new Response.Listener<JSONObject>() {
+                        StringTokenizer stringTokenizer2 =
+                                new StringTokenizer(response.substring(0, 141), "[,]");
+                        while (stringTokenizer2.hasMoreTokens()) {
+
+                            JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(GET, getString(R.string.item) + stringTokenizer2.nextToken() + ".json", null, new Response.Listener<JSONObject>() {
                                 @Override
                                 public void onResponse(JSONObject response) {
                                     try {
-                                        topAdapter.addStory(new Story(response.getString("by"),response.getString("title"),response.getString("url"),response.getInt("descendants"),response.getInt("score"),response.getLong("id"),response.getLong("time")));
+                                        recentAdapter.addStory(new Story(response.getString("by"), response.getString("title"), response.getString("url"), response.getInt("descendants"), response.getInt("score"), response.getLong("id"), response.getLong("time")));
                                     } catch (JSONException e) {
                                         e.printStackTrace();
-                                        Log.d("eacasac: ",response.toString());
+                                        Log.d("error: ", "json object 2");
                                     }
-                                    topAdapter.notifyDataSetChanged();
+                                    recentAdapter.notifyDataSetChanged();
                                 }
                             }, new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
 
                                 }
-                            });MySingleton.getInstance(getApplication().getApplicationContext()).addToRequestQueue(jsonObjectRequest1);
-
+                            });
+                            MySingleton.getInstance(getApplication().getApplicationContext()).addToRequestQueue(jsonObjectRequest2);
                         }
-                        StringRequest stringRequest2 = new StringRequest(GET, getString(R.string.newstories), new Response.Listener<String>() {
+
+                        //BEST STORIES
+                        StringRequest stringRequest3 = new StringRequest(GET, getString(R.string.beststories), new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
 
-                                StringTokenizer stringTokenizer2 =
-                                        new StringTokenizer(response.substring(0,141), "[,]");
-                                while (stringTokenizer2.hasMoreTokens()) {
+                                StringTokenizer stringTokenizer3 =
+                                        new StringTokenizer(response.substring(0, 141), "[,]");
+                                while (stringTokenizer3.hasMoreTokens()) {
 
-                                    JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(GET, getString(R.string.item) + stringTokenizer2.nextToken() + ".json", null, new Response.Listener<JSONObject>() {
+                                    JsonObjectRequest jsonObjectRequest3 = new JsonObjectRequest(GET, getString(R.string.item) + stringTokenizer3.nextToken() + ".json", null, new Response.Listener<JSONObject>() {
                                         @Override
                                         public void onResponse(JSONObject response) {
 
                                             try {
-                                                recentAdapter.addStory(new Story(response.getString("by"),response.getString("title"),response.getString("url"),response.getInt("descendants"),response.getInt("score"),response.getLong("id"),response.getLong("time")));
+                                                bestAdapter.addStory(new Story(response.getString("by"), response.getString("title"), response.getString("url"), response.getInt("descendants"), response.getInt("score"), response.getLong("id"), response.getLong("time")));
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
-                                                Log.d("error: ","json object 2");
                                             }
-                                            recentAdapter.notifyDataSetChanged();
+                                            bestAdapter.notifyDataSetChanged();
 
                                         }
                                     }, new Response.ErrorListener() {
@@ -235,213 +225,53 @@ public class MainActivity extends AppCompatActivity {
                                         public void onErrorResponse(VolleyError error) {
 
                                         }
-                                    });MySingleton.getInstance(getApplication().getApplicationContext()).addToRequestQueue(jsonObjectRequest2);
+                                    });
+                                    MySingleton.getInstance(getApplication().getApplicationContext()).addToRequestQueue(jsonObjectRequest3);
                                 }
-
-                                //BEST STORIES
-                                StringRequest stringRequest3 = new StringRequest(GET, getString(R.string.beststories), new Response.Listener<String>() {
-                                    @Override
-                                    public void onResponse(String response) {
-
-                                        StringTokenizer stringTokenizer3 =
-                                                new StringTokenizer(response.substring(0,141), "[,]");
-                                        while (stringTokenizer3.hasMoreTokens()) {
-
-                                            JsonObjectRequest jsonObjectRequest3 = new JsonObjectRequest(GET, getString(R.string.item) + stringTokenizer3.nextToken() + ".json", null, new Response.Listener<JSONObject>() {
-                                                @Override
-                                                public void onResponse(JSONObject response) {
-
-                                                    try {
-                                                        bestAdapter.addStory(new Story(response.getString("by"),response.getString("title"),response.getString("url"),response.getInt("descendants"),response.getInt("score"),response.getLong("id"),response.getLong("time")));
-                                                    } catch (JSONException e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                    bestAdapter.notifyDataSetChanged();
-
-                                                }
-                                            }, new Response.ErrorListener() {
-                                                @Override
-                                                public void onErrorResponse(VolleyError error) {
-
-                                                }
-                                            });MySingleton.getInstance(getApplication().getApplicationContext()).addToRequestQueue(jsonObjectRequest3);
-                                        }
-                                    }
-                                }, new Response.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-
-                                        Log.v("stringrequest3 :",error.toString());
-
-                                    }
-                                });
-                                MySingleton.getInstance(getApplication().getApplicationContext()).addToRequestQueue(stringRequest3);
-                                //BEST STORIES
-
                             }
                         }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Log.v("stringrequest2 :",error.toString());
+                                Log.v("stringrequest3 :", error.toString());
+
                             }
                         });
-                        MySingleton.getInstance(getApplication().getApplicationContext()).addToRequestQueue(stringRequest2);
-
+                        MySingleton.getInstance(getApplication().getApplicationContext()).addToRequestQueue(stringRequest3);
+                        //BEST STORIES
                     }
-                } ,new Response.ErrorListener() {
+                }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "Selected " + error.getMessage());
-                        Log.v("stringrequest1 :",error.toString());
+                        Log.v("stringrequest2 :", error.toString());
                     }
                 });
-                MySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+                MySingleton.getInstance(getApplication().getApplicationContext()).addToRequestQueue(stringRequest2);
 
-            //Loading selected
-            //String url = getString(R.string.URL_PROFESSOR_DETAILED_INFO)
-            //      + User.getInstance(getApplicationContext()).getUsername()
-            //    + "/";
-             /*{
-                @Override
-                public Map<String, String> getHeaders() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("Authorization", "Token "
-                            + User.getInstance(getApplicationContext()).getToken());
-                    return params;
-                }
-
-            };*/
-
-        //}
-        //top = jsonrequest(getString(R.string.topstories));
-        //best = jsonrequest(getString(R.string.beststories));
-        //recent= jsonrequest(getString(R.string.newstories));
-        //Log.d("dcscd",recent.toString());
-
-
-        //setupViewPager();
-    }
-
-   /* class BackgroundListLoadTask extends AsyncTask<JSONObject, Integer, Void> {
-        @Override
-        protected Void doInBackground(JSONObject... jsonObjects) {
-            try {
-                JSONObject obj = jsonObjects[0];
-                String response = obj.getString("response");
-                int ch = obj.getInt("int");
-                if(ch == 0) {
-                    top = new ArrayList<>();
-                }else if(ch == 1){
-                    recent = new ArrayList<>();
-                }else{
-                    best = new ArrayList<>();
-                }
-                Log.d(TAG+String.valueOf(ch), response);
-                StringTokenizer stringTokenizer =
-                        new StringTokenizer(response, "[,]");
-                while (stringTokenizer.hasMoreTokens()) {
-                    String id = stringTokenizer.nextToken();
-                    Story story = new Story();
-                    story.setId(Long.valueOf(id));
-                    //student.setSelected(true);
-                    if(ch == 0) {
-                        top.add(story);
-                    }else if(ch == 1){
-                        recent.add(story);
-                    }else{
-                        best.add(story);
-                    }
-                }
-
-                if(ch==0){
-                    new GetDetailsTask("Top", top, topAdapter).execute();
-                }else if(ch==1){
-                    new GetDetailsTask("Recent", recent, recentAdapter).execute();
-                }else{
-                    new GetDetailsTask("Best", best, bestAdapter).execute();
-                }
-
-            } catch (Exception e) {
-                Log.d(TAG, e.getMessage());
             }
-            return null;
-        }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "Selected " + error.getMessage());
+                Log.v("stringrequest1 :", error.toString());
+            }
+        });
+        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
 
     }
 
-    class GetDetailsTask extends AsyncTask<Void, Void, Void> {
-        private RecyclerViewPageAdapter adapter;
-        private String listType;
-        private List<Story> stories;
-
-        GetDetailsTask(String listType, List<Story> stories, RecyclerViewPageAdapter adapter) {
-            this.listType = listType;
-            this.adapter = adapter;
-            this.stories = stories;
-        }
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try{if (stories.size() > 0)
-                getDetails(stories.get(0));}catch (NullPointerException e){
-                Log.d("ddde",e.toString());
-            }
-            return null;
-        }
-
-        private void getDetails( Story story) {
-             s =story;
-            String url = getString(R.string.item) + story.getId() + ".json";
-            JsonObjectRequest getDetails = new JsonObjectRequest(GET,
-                    url,
-                    null,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                if (stories.size() > 1) {
-                                    stories.remove(0);
-                                    getDetails(stories.get(0));
-                                }
-                                s.setBy(response.getString("by"));
-                                s.setDescendants(response.getInt("descendants"));
-                                s.setScore(response.getInt("score"));
-                                s.setTime(response.getLong("time"));
-                                s.setTitle(response.getString("title"));
-                                s.setFavourite(0);
-                                adapter.addStory(s);adapter.notifyDataSetChanged();
-                                //Log.d(TAG, "Get details " + student.getUsername() + "");
-                                //if (listType.equals("Top"))
-                                //progressBar.setVisibility(View.GONE);
-                            } catch (Exception e) {
-                                Log.d(TAG, e.getMessage());
-                            }
-                            Log.d("dcsddc",s.toString());
-                        }
-
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.d(TAG, "Volley Error" + error.getMessage());
-                        }
-                    });
-
-            MySingleton.getInstance(getApplicationContext()).addToRequestQueue(getDetails);
-        }
-    }*/
-
-    private void checkCurrentUser(FirebaseUser user){
-
-        Log.d(TAG, "checkCurrentUser: checking if user is logged in."+String.valueOf(ctr));ctr++;
-        if(user == null){
+    private void checkCurrentUser(FirebaseUser user) {
+        Log.d(TAG, "checkCurrentUser: checking if user is logged in." + String.valueOf(ctr));
+        ctr++;
+        if (user == null) {
             Intent intent = new Intent(mContext, LoginActivity.class);
-            startActivity(intent);finish();
+            startActivity(intent);
+            finish();
         }
     }
     /**
      * Setup the firebase auth object
      */
-    private void setupFirebaseAuth(){
+    private void setupFirebaseAuth() {
         Log.d(TAG, "setupFirebaseAuth: setting up firebase auth.");
 
         mAuth = FirebaseAuth.getInstance();
@@ -450,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                Log.d("dsd","deed");
+                Log.d("dsd", "deed");
                 //check if the user is logged in
                 checkCurrentUser(user);
 
@@ -468,10 +298,10 @@ public class MainActivity extends AppCompatActivity {
 
                                 if (task.getResult().exists()) {
 
-                                    Log.d("cdcac","DATA EXISTS");
+                                    Log.d("cdcac", "DATA EXISTS");
                                 } else {
                                     Toast.makeText(MainActivity.this, "Data doesn't exists", Toast.LENGTH_LONG).show();
-                                    startActivity(new Intent(MainActivity.this, ProfileActivity.class).putExtra("start","1"));
+                                    startActivity(new Intent(MainActivity.this, ProfileActivity.class).putExtra("start", "1"));
                                     finish();
                                 }
                             } else {
@@ -489,21 +319,23 @@ public class MainActivity extends AppCompatActivity {
 
                                 if (task.getResult().exists()) {
 
-                                    Toast.makeText(MainActivity.this,"Fav data exist",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(MainActivity.this, "Fav data exist", Toast.LENGTH_LONG).show();
                                     favourites = (ArrayList<Long>) task.getResult().get("idk");
 
-                                }else{
+                                } else {
 
-                                    favourites = new ArrayList<Long>();
-                                    Toast.makeText(MainActivity.this,"Fav data doesnt exist",Toast.LENGTH_LONG).show();
+                                    //favourites = new ArrayList<Long>();
+                                    Toast.makeText(MainActivity.this, "Fav data doesnt exist", Toast.LENGTH_LONG).show();
                                 }
                             } else {
+                                //favourites = new ArrayList<Long>();
                                 String error = task.getException().getMessage();
                                 Toast.makeText(MainActivity.this, "(Firestore Retrieve)error: " + error, Toast.LENGTH_LONG).show();
 
                             }
                         }
                     });
+                    //favourites = new ArrayList<Long>();
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -516,20 +348,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d("sfsf","aaad00");
+        Log.d("sfsf", "aaad00");
         mAuth.addAuthStateListener(firebaseAuthListener);
-
-        Log.d("dad","dsad");
+        Log.d("dad", "dsad");
         //viewPager.setCurrentItem(HOME_FRAGMENT);
         //checkCurrentUser(mAuth.getCurrentUser());
     }
 
 
-
     /**
      * this is for setting up bottomnavigation
      */
-    public void setupBottomNavigation(){
+    public void setupBottomNavigation() {
         BottomNavigationViewEx bottomNavigationViewEx = findViewById(R.id.bottom_nav);
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
         BottomNavigationViewHelper.enableNavigation(MainActivity.this, bottomNavigationViewEx);
@@ -599,6 +429,7 @@ public class MainActivity extends AppCompatActivity {
             }
             return layout;
         }
+
         @Override
         public void destroyItem(ViewGroup container, int tabPosition, Object object) {
             container.removeView((View) object);

@@ -26,7 +26,7 @@ import java.util.List;
  class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPageAdapter.MyViewHolder>{
     private static final String TAG = "ListViewAdapter";
     private List<Story> stories = new ArrayList<Story>();
-    private List<Story> favourites = new ArrayList<Story>();
+    //private List<Story> favourites = new ArrayList<Story>();
     private Context context;
     private static final int ALPHA_ANIMATION_TIME = 200;
     final static int RECENT = 1;
@@ -54,7 +54,7 @@ import java.util.List;
         notifyItemInserted(stories.size() - 1);
     }
 
-    public void removeStory(Story story) {
+    /*public void removeStory(Story story) {
         for (int i = 0; i < favourites.size(); i++) {
             if (favourites.get(i).getId() == story.getId()) {
                 favourites.remove(i);
@@ -62,19 +62,19 @@ import java.util.List;
                 break;
             }
         }
-    }
+    }*/
 
     public void setList(List<Story> stories) {
         this.stories = stories;
     }
 
-    public List<Story> getFavourites() {
+   /* public List<Story> getFavourites() {
         return favourites;
     }
 
     public void setFavourites(List<Story> favourites) {
         this.favourites = favourites;
-    }
+    }*/
 
     public List<Story> getList() {
         return stories;
