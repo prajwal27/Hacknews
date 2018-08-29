@@ -11,4 +11,8 @@
 
     <string name="user">https://hacker-news.firebaseio.com/v0/user/</string>
 
+    <string name="ok">OK</string>
+    <string name="no">NO</string>
+    <string name="yes">YES</string>
+
 </resources>
