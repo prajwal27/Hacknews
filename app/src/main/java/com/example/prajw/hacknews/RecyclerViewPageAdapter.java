@@ -121,7 +121,7 @@ import java.util.List;
                 //holder.itemView.setClickable(false);
                 if(identifier !=1){
                 if (activity.favourites.contains(stories.get(holder.getAdapterPosition()).getId())) {
-
+                    activity.fav.remove(new GsonHelper(context).getGson().toJson(stories.get(holder.getAdapterPosition())));
                     activity.favourites.remove(stories.get(holder.getAdapterPosition()).getId());
                     //favourites.add(stories.get(holder.getAdapterPosition()));
                     //stories.get(holder.getAdapterPosition()).setFavourite(0);
@@ -143,7 +143,7 @@ import java.util.List;
                     //else
                     //  activity.mAllAdapter.notifyDataSetChanged();
                 } else {
-                    //favourites.remove(stories.get(holder.getAdapterPosition()));
+                    activity.fav.add(new GsonHelper(context).getGson().toJson(stories.get(holder.getAdapterPosition())));
                     activity.favourites.add(stories.get(holder.getAdapterPosition()).getId());
                     //stories.get(holder.getAdapterPosition()).setFavourite(1);
                     ////  *** activity..addStory(stories.get(holder.getAdapterPosition()));
