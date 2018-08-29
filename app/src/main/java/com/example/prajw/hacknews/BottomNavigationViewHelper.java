@@ -34,13 +34,15 @@ public class BottomNavigationViewHelper {
                         context.startActivity(intent2);
                         break;
                     case R.id.ic_favourite:
-                        Intent intent3 = new Intent(context,FavouriteActivity.class);
-                        context.startActivity(intent3);
+                        //if(opt != 2){
+                        Intent intent3 = new Intent(context,FavActivity.class);
+                        context.startActivity(intent3);//}
                         break;
                     case R.id.ic_profile:
                         Intent intent4 = new Intent(context,ProfileActivity.class);intent4.putExtra("start","0");
                         context.startActivity(intent4);
                         break;
+                        default:break;
                 }
                 return false;
             }

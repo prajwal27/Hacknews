@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                        // new BackgroundListLoadTask().execute(object);
                         StringTokenizer stringTokenizer1 =
-                                new StringTokenizer(response, "[,]");
+                                new StringTokenizer(response.substring(0,141), "[,]");
                         while (stringTokenizer1.hasMoreTokens()) {
                             //Long id1 = Long.valueOf(stringTokenizer1.nextToken());
 
@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onResponse(String response) {
 
                                 StringTokenizer stringTokenizer2 =
-                                        new StringTokenizer(response, "[,]");
+                                        new StringTokenizer(response.substring(0,141), "[,]");
                                 while (stringTokenizer2.hasMoreTokens()) {
 
                                     JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(GET, getString(R.string.item) + stringTokenizer2.nextToken() + ".json", null, new Response.Listener<JSONObject>() {
@@ -225,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
                                                 recentAdapter.addStory(new Story(response.getString("by"),response.getString("title"),response.getString("url"),response.getInt("descendants"),response.getInt("score"),response.getLong("id"),response.getLong("time")));
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
+                                                Log.d("error: ","json object 2");
                                             }
                                             recentAdapter.notifyDataSetChanged();
 
@@ -243,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
                                     public void onResponse(String response) {
 
                                         StringTokenizer stringTokenizer3 =
-                                                new StringTokenizer(response, "[,]");
+                                                new StringTokenizer(response.substring(0,141), "[,]");
                                         while (stringTokenizer3.hasMoreTokens()) {
 
                                             JsonObjectRequest jsonObjectRequest3 = new JsonObjectRequest(GET, getString(R.string.item) + stringTokenizer3.nextToken() + ".json", null, new Response.Listener<JSONObject>() {
@@ -587,13 +588,13 @@ public class MainActivity extends AppCompatActivity {
             rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
             rv.setNestedScrollingEnabled(false);
             if (tabPosition == TOP_TAB) {
-                topAdapter.notifyDataSetChanged();
+                //topAdapter.notifyDataSetChanged();
                 rv.setAdapter(topAdapter);
             } else if (tabPosition == RECENT_TAB) {
-                recentAdapter.notifyDataSetChanged();
+                //recentAdapter.notifyDataSetChanged();
                 rv.setAdapter(recentAdapter);
             } else if (tabPosition == BEST_TAB) {
-                bestAdapter.notifyDataSetChanged();
+                //bestAdapter.notifyDataSetChanged();
                 rv.setAdapter(bestAdapter);
             }
             return layout;

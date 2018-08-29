@@ -70,7 +70,6 @@ public class FavouriteActivity extends AppCompatActivity {
         recyclerViewPageAdapter = new RecyclerViewPageAdapter(this,1);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
-
         recyclerView.setAdapter(recyclerViewPageAdapter);
         Toast.makeText(this,uid,Toast.LENGTH_LONG);
         firebaseFirestore.collection("Users").document(uid).collection("fav").document("lists").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -98,7 +97,7 @@ public class FavouriteActivity extends AppCompatActivity {
             }
         });
 
-        if(favourites.size()>0)
+        /*if(favourites.size()>0)
         {
             for(int i=0;i<favourites.size(); i++){
                 id = favourites.get(i);
@@ -132,7 +131,7 @@ public class FavouriteActivity extends AppCompatActivity {
                 });
                 MySingleton.getInstance(getApplication().getApplicationContext()).addToRequestQueue(jsonObjectRequest);
             }
-        }
+        }*/
 
 
     }
@@ -140,7 +139,7 @@ public class FavouriteActivity extends AppCompatActivity {
     public void setupBottomNavigation(){
         BottomNavigationViewEx bottomNavigationViewEx = findViewById(R.id.bottom_nav);
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
-        BottomNavigationViewHelper.enableNavigation(FavouriteActivity.this, bottomNavigationViewEx);
+      //  BottomNavigationViewHelper.enableNavigation(FavouriteActivity.this, bottomNavigationViewEx);
         Menu menu = bottomNavigationViewEx.getMenu();
         MenuItem menuItem = menu.getItem(2);
         menuItem.setChecked(true);

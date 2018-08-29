@@ -31,7 +31,8 @@
         <activity android:name=".SearchActivity" />
         <activity android:name=".AccountSettingsActivity" />
         <activity android:name=".WebActivity" />
-        <activity android:name=".Trai"></activity>
+        <activity android:name=".Trai" />
+        <activity android:name=".FavActivity"></activity>
     </application>
 
 </manifest>

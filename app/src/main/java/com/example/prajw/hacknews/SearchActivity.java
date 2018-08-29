@@ -120,9 +120,7 @@ public class SearchActivity extends AppCompatActivity{
                                     JsonObjectRequest objectRequest = new JsonObjectRequest(GET, item_url, null, new Response.Listener<JSONObject>() {
                                         @Override
                                         public void onResponse(JSONObject response) {
-
-                                            listener.onResponse(object, response);
-
+                                            //listener.onResponse(object, response);
                                             int desc = 0;
                                             try {
                                                 desc = (response.getInt("descendants"));
@@ -177,8 +175,7 @@ public class SearchActivity extends AppCompatActivity{
                                             if(!title.equals("NO TITLE")/* && commentList.length()>1*/){
                                             Story s = new Story(name,title,website,desc,score,id,time);
                                             recyclerViewSearchAdapter.addStory(s);}
-                                            //recyclerView.notifyAll();
-
+                                            recyclerView.notifyAll();
                                         }
                                     }, new Response.ErrorListener() {
                                         @Override
@@ -191,34 +188,24 @@ public class SearchActivity extends AppCompatActivity{
                                 }
                                 // storyID = (ArrayList<Long>) response.get("submitted");
 
-
                             } catch (JSONException e) {
                                 Toast.makeText(getApplicationContext(),"ffs",Toast.LENGTH_LONG).show();
                                 e.printStackTrace();
                             }//recyclerViewSearchAdapter = new RecyclerViewSearchAdapter(getApplicationContext(),storyID);
 
-
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-
                             Toast.makeText(getApplicationContext()," error: "+error,Toast.LENGTH_LONG).show();
-
                         }
                     });
-
                     MySingleton.getInstance(getApplication().getApplicationContext()).addToRequestQueue(jsonObjectRequest);
-
                 }else{
                     Toast.makeText(v.getContext(),"  enter username da ",Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
-
-
-
     }
 
     public void setupBottomNavigation(){

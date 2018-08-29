@@ -34,12 +34,12 @@ import java.util.List;
     final static int TOP = 0;
     private int identifier;
     private MainActivity activity;
-    private FavouriteActivity favouriteActivity;
+    private FavActivity favActivity;
 
     public RecyclerViewPageAdapter(Context context, int identifier /*, List<Story> stories*/){
         //this.stories = stories;
         if(identifier !=0) {
-          favouriteActivity = (FavouriteActivity) context;
+          favActivity = (FavActivity) context;
         }else{
         activity = (MainActivity)context;}
         this.context = context;
@@ -107,7 +107,7 @@ import java.util.List;
             else
                 holder.heart.setImageResource(R.drawable.border_fav_story);
         }else{
-            if (favouriteActivity.favourites.contains(stories.get(holder.getAdapterPosition()).getId()))
+            if (favActivity.favourites.contains(stories.get(holder.getAdapterPosition()).getId()))
                 holder.heart.setImageResource(R.drawable.ic_favorite_black_24dp);
             else
                 holder.heart.setImageResource(R.drawable.border_fav_story);
