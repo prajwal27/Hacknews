@@ -23,10 +23,9 @@ import com.example.prajw.hacknews.Story;
 import java.util.ArrayList;
 import java.util.List;
 
- class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPageAdapter.MyViewHolder>{
+class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPageAdapter.MyViewHolder> {
     private static final String TAG = "ListViewAdapter";
     private List<Story> stories = new ArrayList<Story>();
-    //private List<Story> favourites = new ArrayList<Story>();
     private Context context;
     private static final int ALPHA_ANIMATION_TIME = 200;
     final static int RECENT = 1;
@@ -36,55 +35,26 @@ import java.util.List;
     private MainActivity activity;
     private FavActivity favActivity;
 
-    public RecyclerViewPageAdapter(Context context, int identifier /*, List<Story> stories*/){
-        //this.stories = stories;
-        if(identifier !=0) {
-          favActivity = (FavActivity) context;
-        }else{
-        activity = (MainActivity)context;}
+    public RecyclerViewPageAdapter(Context context, int identifier /*, List<Story> stories*/) {
+        if (identifier != 0) {
+            favActivity = (FavActivity) context;
+        } else {
+            activity = (MainActivity) context;
+        }
         this.context = context;
-
     }
 
     public void addStory(Story story) {
-        /*if (identifier == SELECTED && student.isSelected() && students.contains(student))
-            return;
-        Log.d(TAG, "" + identifier);*/
         stories.add(story);
         notifyItemInserted(stories.size() - 1);
     }
 
-    /*public void removeStory(Story story) {
-        for (int i = 0; i < favourites.size(); i++) {
-            if (favourites.get(i).getId() == story.getId()) {
-                favourites.remove(i);
-                notifyItemRemoved(i);
-                break;
-            }
-        }
-    }*/
-
-    public void setList(List<Story> stories) {
-        this.stories = stories;
-    }
-
-   /* public List<Story> getFavourites() {
-        return favourites;
-    }
-
-    public void setFavourites(List<Story> favourites) {
-        this.favourites = favourites;
-    }*/
-
-    public List<Story> getList() {
-        return stories;
-    }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view ;
+        View view;
         LayoutInflater inflater = LayoutInflater.from(context);
         view = inflater.inflate(R.layout.layout_cardview, parent, false);
         MyViewHolder myViewHolder = new MyViewHolder(view);
@@ -97,16 +67,16 @@ import java.util.List;
 
         holder.by_vh.setText(stories.get(position).getBy());
         holder.title_vh.setText(stories.get(position).getTitle());
-        holder.likes_vh.setText(String.valueOf(stories.get(position).getScore())+" Likes");
-        holder.comments_vh.setText(String.valueOf(stories.get(position).getDescendants())+" Comments");
+        holder.likes_vh.setText(String.valueOf(stories.get(position).getScore()) + " Likes");
+        holder.comments_vh.setText(String.valueOf(stories.get(position).getDescendants()) + " Comments");
         holder.time_vh.setText(String.valueOf(stories.get(position).getTime()));
 
-        if(identifier ==0) {
+        if (identifier == 0) {
             if (activity.favourites.contains(stories.get(holder.getAdapterPosition()).getId()))
                 holder.heart.setImageResource(R.drawable.ic_favorite_black_24dp);
             else
                 holder.heart.setImageResource(R.drawable.border_fav_story);
-        }else{
+        } else {
             if (favActivity.favourites.contains(stories.get(holder.getAdapterPosition()).getId()))
                 holder.heart.setImageResource(R.drawable.ic_favorite_black_24dp);
             else
@@ -119,70 +89,34 @@ import java.util.List;
                 //To prevent double clicks
                 //v.setClickable(false);
                 //holder.itemView.setClickable(false);
-                if(identifier !=1){
-                if (activity.favourites.contains(stories.get(holder.getAdapterPosition()).getId())) {
-                    activity.fav.remove(new GsonHelper(context).getGson().toJson(stories.get(holder.getAdapterPosition())));
-                    activity.favourites.remove(stories.get(holder.getAdapterPosition()).getId());
-                    //favourites.add(stories.get(holder.getAdapterPosition()));
-                    //stories.get(holder.getAdapterPosition()).setFavourite(0);
-                    holder.heart.setImageResource(R.drawable.border_fav_story);
-                    /*if(identifier==0){
-                        activity.topAdapter.notifyDataSetChanged();
-                    }else if(identifier == 1){
-                        activity.recentAdapter.notifyDataSetChanged();
-                    }else{
-                        activity.bestAdapter.notifyDataSetChanged();
-                    }*/
-
-                   //   favouriteActivity.favouriteAdapter.addStory(stories.get(holder.getAdapterPosition()));
-                    // **** activity.removeStory(stories.get(holder.getAdapterPosition()));
-                    //  activity.mSelectedAdapter
-                    //        .removeStudent(students.get(holder.getAdapterPosition()));
-                    //if (identifier == ALL)
-                    //  activity.mAllAdapter.notifyItemChanged(holder.getAdapterPosition());
-                    //else
-                    //  activity.mAllAdapter.notifyDataSetChanged();
-                } else {
-                    activity.fav.add(new GsonHelper(context).getGson().toJson(stories.get(holder.getAdapterPosition())));
-                    activity.favourites.add(stories.get(holder.getAdapterPosition()).getId());
-                    //stories.get(holder.getAdapterPosition()).setFavourite(1);
-                    ////  *** activity..addStory(stories.get(holder.getAdapterPosition()));
-                    holder.heart.setImageResource(R.drawable.ic_favorite_black_24dp);
-
-                    /*if(identifier == 0){
-                        activity.topAdapter.notifyDataSetChanged();
-                    }else if(identifier == 1){
-                        activity.recentAdapter.notifyDataSetChanged();
-                    }else{
-                        activity.bestAdapter.notifyDataSetChanged();
-                    }*/
-                    //favouriteActivity.favouriteAdapter.removeStory(stories.get(holder.getAdapterPosition()));
-                    //  activity.mUnselectedAdapter
-                    //         .removeStudent(students.get(holder.getAdapterPosition()));
-                    //if (identifier == ALL)
-                    //  activity.mAllAdapter.notifyItemChanged(holder.getAdapterPosition());
-                    //else
-                    //  activity.mAllAdapter.notifyDataSetChanged();
+                if (identifier != 1) {
+                    if (activity.favourites.contains(stories.get(holder.getAdapterPosition()).getId())) {
+                        activity.fav.remove(new GsonHelper(context).getGson().toJson(stories.get(holder.getAdapterPosition())));
+                        activity.favourites.remove(stories.get(holder.getAdapterPosition()).getId());
+                        holder.heart.setImageResource(R.drawable.border_fav_story);
+                    } else {
+                        activity.fav.add(new GsonHelper(context).getGson().toJson(stories.get(holder.getAdapterPosition())));
+                        activity.favourites.add(stories.get(holder.getAdapterPosition()).getId());
+                        holder.heart.setImageResource(R.drawable.ic_favorite_black_24dp);
+                    }
                 }
-            }}
+            }
         });
-
         holder.detailed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                context.startActivity(new Intent(context,WebActivity.class).putExtra("url",stories.get(holder.getAdapterPosition()).getUrl()));
+                context.startActivity(new Intent(context, WebActivityMain.class).putExtra("url", stories.get(holder.getAdapterPosition()).getUrl()));
             }
         });
     }
-    // Return the size of your dataset (invoked by the layout manager)
+
     @Override
     public int getItemCount() {
         return this.stories.size();
     }
 
-
-     public static class MyViewHolder extends RecyclerView.ViewHolder{
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView heart;
         TextView by_vh, title_vh, url_vh, likes_vh, comments_vh, time_vh;
         ConstraintLayout detailed;
