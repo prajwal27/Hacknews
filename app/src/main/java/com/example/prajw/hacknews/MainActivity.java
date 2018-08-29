@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
     private static int ctr = 0;
     private ViewPager viewPager;
     public ArrayList<Long> favourites = new ArrayList<Long>();
+    public ArrayList<String> fav = new ArrayList<>();
     private RelativeLayout listParent;
     //private ProgressBar progressBar;
     RecyclerViewPageAdapter topAdapter;
@@ -90,8 +91,13 @@ public class MainActivity extends AppCompatActivity {
 
         if (mAuth.getCurrentUser() != null) {
             Map<String, ArrayList<Long>> userMap = new HashMap<String, ArrayList<Long>>();
+            Map<String, ArrayList<String>> fav = new HashMap<String, ArrayList<String>>();
             userMap.put("idk", this.favourites);
-            firebaseFirestore.collection("Users").document(uid).collection("fav").document("lists").set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            fav.put("fav",this.fav);
+            Map<String, Map> f = new HashMap<String, Map>();
+            f.put("kdi",userMap);
+            f.put("vaf",fav);
+            firebaseFirestore.collection("Users").document(uid).collection("fav").document("lists").set(f).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
 
@@ -320,7 +326,8 @@ public class MainActivity extends AppCompatActivity {
                                 if (task.getResult().exists()) {
 
                                     Toast.makeText(MainActivity.this, "Fav data exist", Toast.LENGTH_LONG).show();
-                                    favourites = (ArrayList<Long>) task.getResult().get("idk");
+                                    favourites = (ArrayList<Long>)((Map) task.getResult().get("kdi")).get("idk");
+                                    fav = (ArrayList<String>)((Map) task.getResult().get("vaf")).get("fav");
 
                                 } else {
 
