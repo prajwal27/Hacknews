@@ -67,7 +67,7 @@ public class RecyclerViewSearchAdapter extends RecyclerView.Adapter<RecyclerView
         holder.comments_vh.setText(String.valueOf(stories.get(position).getDescendants())+" Comments");
         holder.time_vh.setText(String.valueOf(stories.get(position).getTime()));
 
-        holder.detailed.setOnClickListener(new View.OnClickListener() {
+       /* holder.detailed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -77,7 +77,7 @@ public class RecyclerViewSearchAdapter extends RecyclerView.Adapter<RecyclerView
 
 
             }
-        });
+        });*/
 
     }
 

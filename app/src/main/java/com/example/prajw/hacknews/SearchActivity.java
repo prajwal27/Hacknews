@@ -165,17 +165,17 @@ public class SearchActivity extends AppCompatActivity{
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                             }
-                                             String commentList = "1";
+                                             /*String commentList = "1";
 
                                             try {
                                                commentList = String.valueOf(response.get("kids"));
                                                 }
                                              catch (JSONException e) {
                                                 e.printStackTrace();
-                                            }
+                                            }*/
                                             Log.d("search ", "yo");
-                                            if(!title.equals("NO TITLE") && commentList.length()>1){
-                                            Story s = new Story(name,title,website,desc,score,id,time,commentList);
+                                            if(!title.equals("NO TITLE")/* && commentList.length()>1*/){
+                                            Story s = new Story(name,title,website,desc,score,id,time);
                                             recyclerViewSearchAdapter.addStory(s);}
                                             //recyclerView.notifyAll();
 
@@ -183,7 +183,7 @@ public class SearchActivity extends AppCompatActivity{
                                     }, new Response.ErrorListener() {
                                         @Override
                                         public void onErrorResponse(VolleyError error) {
-                                            listener.onErrorResponse(object,error);
+                                            //listener.onErrorResponse(object,error);
                                             Toast.makeText(getApplicationContext()," error in deep: "+error,Toast.LENGTH_LONG).show();
                                         }
                                     });

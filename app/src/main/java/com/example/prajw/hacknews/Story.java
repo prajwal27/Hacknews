@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 
-public class Story implements Parcelable {
+public class Story  {
 
     private String by, title, url;
     private int descendants, score;
@@ -34,7 +34,7 @@ public class Story implements Parcelable {
 
     }
 
-    public Story(String by, String title, String url, int descendants, int score, long id, long time, String commentList) {
+    public Story(String by, String title, String url, int descendants, int score, long id, long time) {
         this.by = by;
         this.title = title;
         this.url = url;
@@ -42,7 +42,7 @@ public class Story implements Parcelable {
         this.score = score;
         this.id = id;
         this.time = time;
-        this.commentList = commentList;
+        //this.commentList = commentList;
     }
 
     @Override
@@ -106,7 +106,7 @@ public class Story implements Parcelable {
         this.time = time;
     }
 
-    @Override
+   /* @Override
     public int describeContents() {
         return 0;
     }
@@ -144,5 +144,5 @@ public class Story implements Parcelable {
                     return new Story[size];
                 }
 
-            };
+            };*/
 }

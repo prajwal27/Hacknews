@@ -62,6 +62,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import static com.android.volley.Request.Method.GET;
+
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
@@ -92,13 +94,13 @@ public class MainActivity extends AppCompatActivity {
    // FavouriteActivity favourite;
 
 
-    @Override
+   /* @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("top", (ArrayList<? extends Parcelable>) topAdapter.getList());
         outState.putParcelableArrayList("recent", (ArrayList<? extends Parcelable>) recentAdapter.getList());
         outState.putParcelableArrayList("best", (ArrayList<? extends Parcelable>) bestAdapter.getList());
-    }
+    }*/
 
 
     @Override
@@ -164,12 +166,12 @@ public class MainActivity extends AppCompatActivity {
              //recentAdapter.setList(savedInstanceState.getParcelableArrayList("best"));
             ;;
         }else {*/
-            for(i = 0; i<3 ; i++){
+           // for(i = 0; i<3 ; i++){
 
-                String url = getString(j[i]);
+                //String url = getString(j[i]);
                 //String url = getString(R.string.topstories);
-                StringRequest stringRequest = new StringRequest(Request.Method.GET
-                        , url
+                StringRequest stringRequest = new StringRequest(GET
+                        , getString(R.string.topstories)
                         , new Response.Listener<String>() {
 
                     @Override
@@ -182,16 +184,118 @@ public class MainActivity extends AppCompatActivity {
                             e.printStackTrace();
                             Log.d("error on the wall",e.toString());
                         }
-                        new BackgroundListLoadTask().execute(object);
+                       // new BackgroundListLoadTask().execute(object);
+                        StringTokenizer stringTokenizer1 =
+                                new StringTokenizer(response, "[,]");
+                        while (stringTokenizer1.hasMoreTokens()) {
+                            //Long id1 = Long.valueOf(stringTokenizer1.nextToken());
+
+                            JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(GET, getString(R.string.item) + stringTokenizer1.nextToken() + ".json", null, new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        topAdapter.addStory(new Story(response.getString("by"),response.getString("title"),response.getString("url"),response.getInt("descendants"),response.getInt("score"),response.getLong("id"),response.getLong("time")));
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                        Log.d("eacasac: ",response.toString());
+                                    }
+                                    topAdapter.notifyDataSetChanged();
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+
+                                }
+                            });MySingleton.getInstance(getApplication().getApplicationContext()).addToRequestQueue(jsonObjectRequest1);
+
+                        }
+                        StringRequest stringRequest2 = new StringRequest(GET, getString(R.string.newstories), new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+
+                                StringTokenizer stringTokenizer2 =
+                                        new StringTokenizer(response, "[,]");
+                                while (stringTokenizer2.hasMoreTokens()) {
+
+                                    JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(GET, getString(R.string.item) + stringTokenizer2.nextToken() + ".json", null, new Response.Listener<JSONObject>() {
+                                        @Override
+                                        public void onResponse(JSONObject response) {
+
+                                            try {
+                                                recentAdapter.addStory(new Story(response.getString("by"),response.getString("title"),response.getString("url"),response.getInt("descendants"),response.getInt("score"),response.getLong("id"),response.getLong("time")));
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                            recentAdapter.notifyDataSetChanged();
+
+                                        }
+                                    }, new Response.ErrorListener() {
+                                        @Override
+                                        public void onErrorResponse(VolleyError error) {
+
+                                        }
+                                    });MySingleton.getInstance(getApplication().getApplicationContext()).addToRequestQueue(jsonObjectRequest2);
+                                }
+
+                                //BEST STORIES
+                                StringRequest stringRequest3 = new StringRequest(GET, getString(R.string.beststories), new Response.Listener<String>() {
+                                    @Override
+                                    public void onResponse(String response) {
+
+                                        StringTokenizer stringTokenizer3 =
+                                                new StringTokenizer(response, "[,]");
+                                        while (stringTokenizer3.hasMoreTokens()) {
+
+                                            JsonObjectRequest jsonObjectRequest3 = new JsonObjectRequest(GET, getString(R.string.item) + stringTokenizer3.nextToken() + ".json", null, new Response.Listener<JSONObject>() {
+                                                @Override
+                                                public void onResponse(JSONObject response) {
+
+                                                    try {
+                                                        bestAdapter.addStory(new Story(response.getString("by"),response.getString("title"),response.getString("url"),response.getInt("descendants"),response.getInt("score"),response.getLong("id"),response.getLong("time")));
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    bestAdapter.notifyDataSetChanged();
+
+                                                }
+                                            }, new Response.ErrorListener() {
+                                                @Override
+                                                public void onErrorResponse(VolleyError error) {
+
+                                                }
+                                            });MySingleton.getInstance(getApplication().getApplicationContext()).addToRequestQueue(jsonObjectRequest3);
+                                        }
+                                    }
+                                }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+
+                                        Log.v("stringrequest3 :",error.toString());
+
+                                    }
+                                });
+                                MySingleton.getInstance(getApplication().getApplicationContext()).addToRequestQueue(stringRequest3);
+                                //BEST STORIES
+
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.v("stringrequest2 :",error.toString());
+                            }
+                        });
+                        MySingleton.getInstance(getApplication().getApplicationContext()).addToRequestQueue(stringRequest2);
+
                     }
                 } ,new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d(TAG, "Selected " + error.getMessage());
+                        Log.v("stringrequest1 :",error.toString());
                     }
                 });
                 MySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
-            }
+
             //Loading selected
             //String url = getString(R.string.URL_PROFESSOR_DETAILED_INFO)
             //      + User.getInstance(getApplicationContext()).getUsername()
@@ -217,7 +321,7 @@ public class MainActivity extends AppCompatActivity {
         //setupViewPager();
     }
 
-    class BackgroundListLoadTask extends AsyncTask<JSONObject, Integer, Void> {
+   /* class BackgroundListLoadTask extends AsyncTask<JSONObject, Integer, Void> {
         @Override
         protected Void doInBackground(JSONObject... jsonObjects) {
             try {
@@ -250,7 +354,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if(ch==0){
                     new GetDetailsTask("Top", top, topAdapter).execute();
-                }else if(ch==2){
+                }else if(ch==1){
                     new GetDetailsTask("Recent", recent, recentAdapter).execute();
                 }else{
                     new GetDetailsTask("Best", best, bestAdapter).execute();
@@ -286,7 +390,7 @@ public class MainActivity extends AppCompatActivity {
         private void getDetails( Story story) {
              s =story;
             String url = getString(R.string.item) + story.getId() + ".json";
-            JsonObjectRequest getDetails = new JsonObjectRequest(Request.Method.GET,
+            JsonObjectRequest getDetails = new JsonObjectRequest(GET,
                     url,
                     null,
                     new Response.Listener<JSONObject>() {
@@ -323,7 +427,7 @@ public class MainActivity extends AppCompatActivity {
 
             MySingleton.getInstance(getApplicationContext()).addToRequestQueue(getDetails);
         }
-    }
+    }*/
 
     private void checkCurrentUser(FirebaseUser user){
 
