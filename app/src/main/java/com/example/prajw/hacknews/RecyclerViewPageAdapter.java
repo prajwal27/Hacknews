@@ -106,6 +106,7 @@ class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPageAdapt
                 //holder.itemView.setClickable(false);
                 if (identifier == 0) {
                     if (activity.favourites.contains(stories.get(holder.getAdapterPosition()).getId())) {
+
                         activity.fav.remove(new GsonHelper(context).getGson().toJson(stories.get(holder.getAdapterPosition())));
                         activity.favourites.remove(stories.get(holder.getAdapterPosition()).getId());
                         holder.heart.setImageResource(R.drawable.border_fav_story);
@@ -115,7 +116,8 @@ class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPageAdapt
                         holder.heart.setImageResource(R.drawable.ic_favorite_black_24dp);
                     }
                 }else{
-
+                    favActivity.favID.remove(stories.get(holder.getAdapterPosition()).getId());
+                    favActivity.fav.remove(new GsonHelper(context).getGson().toJson(stories.get(holder.getAdapterPosition())));
                     removeStory(holder.getAdapterPosition());
                 }
             }

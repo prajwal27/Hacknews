@@ -43,6 +43,7 @@ public class WebActivityMain extends AppCompatActivity {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);
+            progressBar.setVisibility(View.GONE);
             return true;
         }
     }

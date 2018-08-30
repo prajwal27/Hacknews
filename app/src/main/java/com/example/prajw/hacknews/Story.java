@@ -5,13 +5,13 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 
-public class Story  {
+public class Story implements Parcelable {
 
     private String by, title, url;
     private int descendants, score;
     private long id, time;
     //private int isFavourite;
-   /* private String commentList;
+  /* private String commentList;
 
     public String getCommentList() {
         return commentList;
@@ -36,11 +36,6 @@ public class Story  {
         this.id = id;
         this.time = time;
         //this.commentList = commentList;
-    }
-
-    @Override
-    public String toString() {
-        return by + String.valueOf(id);
     }
 
     public String getBy() {
@@ -99,7 +94,7 @@ public class Story  {
         this.time = time;
     }
 
-   /* @Override
+    @Override
     public int describeContents() {
         return 0;
     }
@@ -128,7 +123,7 @@ public class Story  {
                     story.setScore(source.readInt());
                     story.setId(source.readLong());
                     story.setTime(source.readLong());
-                    story.setFavourite(source.readInt());
+                    //story.setFavourite(source.readInt());
                     return story;
                 }
 
@@ -137,5 +132,5 @@ public class Story  {
                     return new Story[size];
                 }
 
-            };*/
+            };
 }

@@ -66,16 +66,15 @@ public class RecyclerViewSearchAdapter extends RecyclerView.Adapter<RecyclerView
         holder.likes_vh.setText(String.valueOf(stories.get(position).getScore())+" Likes");
         holder.comments_vh.setText(String.valueOf(stories.get(position).getDescendants())+" Comments");
         holder.time_vh.setText(String.valueOf(stories.get(position).getTime()));
-
+        holder.heart.setVisibility(View.GONE);
        /* holder.detailed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Intent intent = new Intent(context,WebActivity.class);
                 intent.putExtra("url",stories.get(holder.getAdapterPosition()).getUrl());
-                intent.putExtra("comment_ids",stories.get(holder.getAdapterPosition()).getCommentList());
-
-
+                //intent.putExtra("comment_ids",stories.get(holder.getAdapterPosition()).getCommentList());
+                v.getContext().startActivity(intent);
             }
         });*/
 

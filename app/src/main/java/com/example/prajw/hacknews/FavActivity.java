@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.android.volley.Request.Method.GET;
@@ -40,7 +41,9 @@ public class FavActivity extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
     RecyclerViewPageAdapter recyclerViewPageAdapter;
     ArrayList<Story> stories = new ArrayList<Story>();
+    ArrayList<Long> favID = new ArrayList<Long>();
     ArrayList<String> fav = new ArrayList<String>();
+    private String uid;
 
     @Override
     protected void onStart() {
@@ -51,6 +54,25 @@ public class FavActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        Map<String, ArrayList<Long>> userMap = new HashMap<String, ArrayList<Long>>();
+        Map<String, ArrayList<String>> favourites = new HashMap<String, ArrayList<String>>();
+        userMap.put("idk", this.favID);
+        favourites.put("fav",this.fav);
+        Map<String, Map> f = new HashMap<String, Map>();
+        f.put("kdi",userMap);
+        f.put("vaf",favourites);
+        firebaseFirestore.collection("Users").document(uid).collection("fav").document("lists").set(f).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+                if (task.isSuccessful()) {
+                    Log.d("bbdksbckb", "nndefncenf");
+                } else {
+                    Log.d("k kc ak cddc ", "nckdncdncdscdcndslj");
+                }
+            }
+        });
+
     }
 
     @Override
@@ -63,6 +85,7 @@ public class FavActivity extends AppCompatActivity {
         recyclerViewPageAdapter = new RecyclerViewPageAdapter(this, 1);
         recyclerViewFav = findViewById(R.id.rv_fav);
         mAuth = FirebaseAuth.getInstance();
+        uid = mAuth.getCurrentUser().getUid();
         String uid = mAuth.getCurrentUser().getUid();
         firebaseFirestore = FirebaseFirestore.getInstance();
         Log.d("addd","deddeed");
@@ -83,6 +106,7 @@ public class FavActivity extends AppCompatActivity {
                     if (task.getResult().exists()) {
                         //favourites = (ArrayList<Long>) task.getResult().get("idk");
                         fav = (ArrayList<String>)((Map) task.getResult().get("vaf")).get("fav");
+                        favID = (ArrayList<Long>)((Map) task.getResult().get("kdi")).get("idk");
                         for(int  i = 0;i<fav.size();i++){
                             Story s = GsonHelper.getInstance(getApplication().getApplicationContext()).getGson().fromJson(fav.get(i),Story.class);
                             //recyclerViewPageAdapter.addStory(s);

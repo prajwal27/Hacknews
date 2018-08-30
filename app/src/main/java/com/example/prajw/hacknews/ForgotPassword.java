@@ -30,7 +30,7 @@ public class ForgotPassword extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         email = findViewById(R.id.email);
-        reset = findViewById(R.id.forgotpassword);
+        reset = findViewById(R.id.reset);
         register = findViewById(R.id.forgotToRegister);
         login = findViewById(R.id.forgotToLogin);
 

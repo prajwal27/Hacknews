@@ -64,6 +64,8 @@ public class AccountSettingsActivity extends AppCompatActivity {
                 switch (position){
                     case 0:
                         Toast.makeText(view.getContext(),"EDIT PROFILE",Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(AccountSettingsActivity.this,ProfileActivity.class).putExtra("start",1));
+                        finish();
                         break;
                     case  1:
                         Details();

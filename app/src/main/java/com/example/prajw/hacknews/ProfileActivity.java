@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +44,8 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.view.View.GONE;
+
 public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
@@ -50,14 +53,32 @@ public class ProfileActivity extends AppCompatActivity {
     private StorageReference firebaseStorage;
 
     private EditText name, place;
-    private EditText something, dob, institution, git;
+    private EditText username, dob, institution, git;
     private Button submit;
     private CircleImageView profilePic;
     private Uri mainImageUri =null;
     private Boolean isChanged = false;
-    private String uid, NAME, INSTI, GIT, PLACE, DOB;
+    private String uid, NAME, INSTI, GIT, PLACE, DOB, USERNAME;
     private ImageView settings;
+    private ProgressBar progress;
 
+   /* public void nonEditable() {
+        username.setFocusable(false);
+        username.setCursorVisible(false);
+        place.setFocusable(false);
+        place.setCursorVisible(false);
+        dob.setFocusable(false);
+        dob.setCursorVisible(false);
+        institution.setFocusable(false);
+        institution.setCursorVisible(false);
+        git.setFocusable(false);
+        git.setCursorVisible(false);
+        name.setFocusable(false);
+        name.setCursorVisible(false);
+        profilePic.setEnabled(false);
+        profilePic.setEnabled(fal);
+
+    }*/
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -71,16 +92,19 @@ public class ProfileActivity extends AppCompatActivity {
         name = findViewById(R.id.tv_name);
         place = findViewById(R.id.tv_address);
         settings = findViewById(R.id.settings);
+        username = findViewById(R.id.username);
+        progress = findViewById(R.id.profile_progress);
 
         Log.d("dadda","dddedcdccd");
         if(getIntent().getStringExtra("start").equals("1")){
-            findViewById(R.id.bottom_nav).setVisibility(View.GONE);
+            findViewById(R.id.bottom_nav).setVisibility(GONE);
             Log.d("dadda","ddde");
             submit.setVisibility(View.VISIBLE);
+
             submit.setEnabled(true);
         }else{
             settings.setVisibility(View.VISIBLE);
-            submit.setVisibility(View.GONE);
+            submit.setVisibility(GONE);
             setupBottomNavigation();
         }
 
@@ -102,6 +126,7 @@ public class ProfileActivity extends AppCompatActivity {
                         String dobF = task.getResult().getString("dob");
                         String institutionF = task.getResult().getString("institution");
                         String gitF = task.getResult().getString("git");
+                        String usernameF =task.getResult().getString("username");
 
                         mainImageUri = Uri.parse(profilePicF);
                         name.setText(nameF);
@@ -109,9 +134,10 @@ public class ProfileActivity extends AppCompatActivity {
                         institution.setText(institutionF);
                         git.setText(gitF);
                         place.setText(placeF);
+                        username.setText(usernameF);
 
                         RequestOptions placeholderRequest = new RequestOptions();
-                        placeholderRequest.placeholder(R.drawable.ic_launcher_background);
+                        placeholderRequest.placeholder(R.drawable.heisenberg);
                         Glide.with(ProfileActivity.this).setDefaultRequestOptions(placeholderRequest).load(profilePicF).into(profilePic);
 
                     }else{
@@ -161,9 +187,10 @@ public class ProfileActivity extends AppCompatActivity {
                 INSTI = institution.getText().toString();
                 GIT = git.getText().toString();
                 PLACE = place.getText().toString();
+                USERNAME = username.getText().toString();
 
                 if (!TextUtils.isEmpty(NAME)&& !TextUtils.isEmpty(DOB)&& !TextUtils.isEmpty(INSTI)&& !TextUtils.isEmpty(GIT) && !TextUtils.isEmpty(PLACE) && mainImageUri != null) {
-                    //progress.setVisibility(View.VISIBLE);
+                    progress.setVisibility(View.VISIBLE);
 
                     if (isChanged) {
 
@@ -176,6 +203,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                                     storeFirestore(task);
                                 } else {
+                                    progress.setVisibility(GONE);
                                     String error = task.getException().getMessage();
                                     Toast.makeText(ProfileActivity.this, "error: " + error, Toast.LENGTH_LONG).show();
 
@@ -237,6 +265,7 @@ public class ProfileActivity extends AppCompatActivity {
         userMap.put("institution", INSTI);
         userMap.put("dob", DOB);
         userMap.put("git", GIT);
+        userMap.put("username", USERNAME);
         userMap.put("profilePic",downloadUri.toString());
 
         firebaseFirestore.collection("Users").document(uid).set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -249,7 +278,7 @@ public class ProfileActivity extends AppCompatActivity {
                     finish();
 
                 } else {
-
+                    progress.setVisibility(GONE);
                     String error=task.getException().getMessage();
                     Toast.makeText(ProfileActivity.this,"error: "+error,Toast.LENGTH_LONG).show();
                 }

@@ -92,12 +92,12 @@ public class MainActivity extends AppCompatActivity {
 
         if (mAuth.getCurrentUser() != null) {
             Map<String, ArrayList<Long>> userMap = new HashMap<String, ArrayList<Long>>();
-            Map<String, ArrayList<String>> fav = new HashMap<String, ArrayList<String>>();
+            Map<String, ArrayList<String>> favvv = new HashMap<String, ArrayList<String>>();
             userMap.put("idk", this.favourites);
-            fav.put("fav",this.fav);
+            favvv.put("fav",this.fav);
             Map<String, Map> f = new HashMap<String, Map>();
             f.put("kdi",userMap);
-            f.put("vaf",fav);
+            f.put("vaf",favvv);
             firebaseFirestore.collection("Users").document(uid).collection("fav").document("lists").set(f).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.container);
         listTabs.setupWithViewPager(viewPager);
         viewPager.setAdapter(new CustomListPagerAdapter());
-        viewPager.setCurrentItem(CustomListPagerAdapter.RECENT_TAB);
+        viewPager.setCurrentItem(CustomListPagerAdapter.TOP_TAB);
 
         try {
             if (getIntent().getStringExtra("logout").equals("logout")) {

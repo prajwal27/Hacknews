@@ -65,29 +65,33 @@ public class WebActivity extends AppCompatActivity {
         ArrayList<Integer> comment_ids = new ArrayList<Integer>();
         StringTokenizer stringTokenizer =
                 new StringTokenizer(comment_list, "[,]");
+
         while (stringTokenizer.hasMoreTokens()) {
             String id = stringTokenizer.nextToken();
-            comment_ids.add(Integer.valueOf(id));
-        }
 
-
-        for(int i=0;i< comment_ids.size();i++){
-
-            String url = getString(R.string.item)+String.valueOf(comment_ids.get(i));
+            String url = getString(R.string.item)+id+".json";
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(GET, url, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                        String name="hi",comment="yo";
                     try {
-                         name = response.getString("by");
-                         comment = response.getString("text");
-                    } catch (JSONException e) {
-                        name="psp";comment="no";
+                        if (response.getString("type").equals("comment")) {
+                            String name = "hi", comment = "yo";
+                            try {
+                                name = response.getString("by");
+                                comment = response.getString("text");
+                            } catch (JSONException e) {
+                                name = "psp";
+                                comment = "no";
+                                e.printStackTrace();
+                            }
+
+                            recyclerCommentAdapter.add(name, comment);
+                        }
+                        //recyclerView.setAdapter(recyclerCommentAdapter);
+
+                    }catch (JSONException e){
                         e.printStackTrace();
                     }
-                    recyclerCommentAdapter.add(name,comment);
-                    recyclerView.setAdapter(recyclerCommentAdapter);
-
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -95,7 +99,7 @@ public class WebActivity extends AppCompatActivity {
 
                 }
             });
-                MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+            MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
         }
 
 
