@@ -1,5 +1,5 @@
 
-# HACKNEWS is a Hacker Client for Android
+# HACKNEWS is a HackerNews Client for Android
 
 # Firebase
 Firebase Auth - for Authentication of Users.
