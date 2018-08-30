@@ -10,8 +10,8 @@ public class Story  {
     private String by, title, url;
     private int descendants, score;
     private long id, time;
-    private int isFavourite;
-    private String commentList;
+    //private int isFavourite;
+   /* private String commentList;
 
     public String getCommentList() {
         return commentList;
@@ -19,15 +19,8 @@ public class Story  {
 
     public void setCommentList(String commentList) {
         this.commentList = commentList;
-    }
+    }*/
 
-    public int getFavourite() {
-        return isFavourite;
-    }
-
-    public void setFavourite(int favourite) {
-        isFavourite = favourite;
-    }
     // setter maadbeku;
 
     public Story(){

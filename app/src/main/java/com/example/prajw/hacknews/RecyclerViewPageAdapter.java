@@ -24,23 +24,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPageAdapter.MyViewHolder> {
-    private static final String TAG = "ListViewAdapter";
     private List<Story> stories = new ArrayList<Story>();
     private Context context;
     private static final int ALPHA_ANIMATION_TIME = 200;
-    final static int RECENT = 1;
-    final static int BEST = 2;
-    final static int TOP = 0;
     private int identifier;
     private MainActivity activity;
     private FavActivity favActivity;
 
+    public List<Story> getStories() {
+        return stories;
+    }
+
+    public void setStories(List<Story> stories) {
+        this.stories = stories;
+        notifyDataSetChanged();
+    }
+
+
     public RecyclerViewPageAdapter(Context context, int identifier /*, List<Story> stories*/) {
-        if (identifier != 0) {
+        if (identifier == 1) {
             favActivity = (FavActivity) context;
         } else {
             activity = (MainActivity) context;
         }
+        this.identifier = identifier;
+
         this.context = context;
     }
 
@@ -49,6 +57,10 @@ class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPageAdapt
         notifyItemInserted(stories.size() - 1);
     }
 
+    public void removeStory(int i){
+        stories.remove(i);
+        notifyItemRemoved(i);
+    }
 
     @NonNull
     @Override
@@ -77,11 +89,14 @@ class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPageAdapt
             else
                 holder.heart.setImageResource(R.drawable.border_fav_story);
         } else {
+                //holder.heart.setVisibility(View.INVISIBLE);
+            holder.heart.setImageResource(R.drawable.ic_favorite_black_24dp);
+        }/*else {
             if (favActivity.favourites.contains(stories.get(holder.getAdapterPosition()).getId()))
                 holder.heart.setImageResource(R.drawable.ic_favorite_black_24dp);
             else
                 holder.heart.setImageResource(R.drawable.border_fav_story);
-        }
+        }*/
 
         holder.heart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,7 +104,7 @@ class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPageAdapt
                 //To prevent double clicks
                 //v.setClickable(false);
                 //holder.itemView.setClickable(false);
-                if (identifier != 1) {
+                if (identifier == 0) {
                     if (activity.favourites.contains(stories.get(holder.getAdapterPosition()).getId())) {
                         activity.fav.remove(new GsonHelper(context).getGson().toJson(stories.get(holder.getAdapterPosition())));
                         activity.favourites.remove(stories.get(holder.getAdapterPosition()).getId());
@@ -99,6 +114,9 @@ class RecyclerViewPageAdapter extends RecyclerView.Adapter<RecyclerViewPageAdapt
                         activity.favourites.add(stories.get(holder.getAdapterPosition()).getId());
                         holder.heart.setImageResource(R.drawable.ic_favorite_black_24dp);
                     }
+                }else{
+
+                    removeStory(holder.getAdapterPosition());
                 }
             }
         });

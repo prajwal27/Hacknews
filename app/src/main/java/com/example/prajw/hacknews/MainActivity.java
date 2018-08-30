@@ -26,6 +26,7 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -127,6 +128,20 @@ public class MainActivity extends AppCompatActivity {
         listTabs.setupWithViewPager(viewPager);
         viewPager.setAdapter(new CustomListPagerAdapter());
         viewPager.setCurrentItem(CustomListPagerAdapter.RECENT_TAB);
+
+        try {
+            if (getIntent().getStringExtra("logout").equals("logout")) {
+                MySingleton.getInstance(this).getRequestQueue().cancelAll(new RequestQueue.RequestFilter() {
+                    @Override
+                    public boolean apply(Request<?> request) {
+                        return true;
+                    }
+                });
+                mAuth.signOut();
+            }
+        }catch (NullPointerException e){
+            ;
+        }
 
         if (mAuth.getCurrentUser() == null) {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
